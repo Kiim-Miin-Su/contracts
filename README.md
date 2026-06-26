@@ -1,4 +1,4 @@
-# @taco/contracts
+# @kms545487/contracts
 
 프론트엔드(Next.js)와 백엔드(NestJS)가 공유하는 **도메인 계약** 단일 소스. 도메인 타입·enum·요청 DTO 형상을 담습니다.
 
@@ -49,7 +49,7 @@ npm은 publish에 2단계 인증을 요구합니다. 둘 중 하나:
 
 ```jsonc
 // package.json
-{ "dependencies": { "@taco/contracts": "^0.1.0" } }   // file:../contracts → 버전
+{ "dependencies": { "@kms545487/contracts": "^0.1.0" } }   // file:../contracts → 버전
 ```
 
 ```bash
@@ -62,8 +62,8 @@ npm install        # 레지스트리에서 설치 → CI 빌드 통과
 
 ```bash
 cd contracts && npm run build && npm link
-cd ../frontend && npm link @taco/contracts
-cd ../backend  && npm link @taco/contracts
+cd ../frontend && npm link @kms545487/contracts
+cd ../backend  && npm link @kms545487/contracts
 ```
 
 ## 구성
