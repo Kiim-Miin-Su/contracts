@@ -24,10 +24,26 @@ repo가 분리되어 있어 **원격/CI 빌드에서는 `file:../contracts`가 �
 
 ```bash
 cd contracts
-npm login                       # (GitHub Packages면 .npmrc에 레지스트리/토큰 설정)
 npm version patch               # 0.1.0 → 0.1.1 (변경 시마다)
-npm publish                     # prepublishOnly가 자동 build
+npm publish --access public     # prepublishOnly가 자동 build
 ```
+
+#### 2FA 오류(E403) 해결
+npm은 publish에 2단계 인증을 요구합니다. 둘 중 하나:
+
+- **일회성(OTP)**: 인증앱 6자리 코드로 즉시 publish
+  ```bash
+  npm publish --access public --otp=123456
+  ```
+- **토큰(반복·CI 권장)**: npmjs.com → Access Tokens → **Granular/Automation token**
+  (publish 시 2FA bypass 가능)를 발급 → 환경변수로 주입 (이 폴더의 `.npmrc`가 `${NPM_TOKEN}` 사용)
+  ```bash
+  export NPM_TOKEN=npm_xxxxx
+  npm publish --access public
+  ```
+  CI에서는 `NPM_TOKEN`을 시크릿으로 등록하면 됩니다.
+
+> 비공개로 두려면 `--access public` 대신 `publishConfig.access: "restricted"`(유료 플랜 필요).
 
 ### 2) 소비측(frontend·backend) 의존 전환
 
