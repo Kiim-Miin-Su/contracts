@@ -6,4 +6,5 @@ export * from './enrollment';
 export * from './session';
 export * from './finance';
 export * from './counsel';
+export * from './event';
 export * from './inputs';

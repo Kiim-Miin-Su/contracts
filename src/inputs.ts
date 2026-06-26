@@ -2,6 +2,7 @@
 import type { ID, ISODate } from './common';
 import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
+import type { EventType } from './event';
 
 export type CreateStudentInput = {
   name: string;
@@ -39,3 +40,25 @@ export type CreateExpenseInput = {
   vendor?: string;
   memo?: string;
 };
+
+export type CreateSubjectInput = {
+  code: string;
+  name: string;
+};
+
+export type CreateCourseInput = {
+  name: string;
+  subjectId: ID;
+  instructorId: ID;
+  price: number;
+};
+
+export type CreateEventInput = {
+  title: string;
+  type: EventType;
+  startDate: ISODate;
+  endDate: ISODate;
+  allDay?: boolean;
+  memo?: string;
+};
+
