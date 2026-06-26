@@ -1,11 +1,29 @@
 {
   "name": "@taco/contracts",
   "version": "0.1.0",
-  "private": true,
   "description": "TACO 공유 도메인 계약(타입·enum·DTO). 프론트/백 단일 소스.",
-  "types": "./src/index.ts",
-  "main": "./src/index.ts",
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
