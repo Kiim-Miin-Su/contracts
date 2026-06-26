@@ -39,6 +39,7 @@ export type CreateExpenseInput = {
   spentAt: ISODate;
   vendor?: string;
   memo?: string;
+  receiptUrl?: string;
 };
 
 export type CreateSubjectInput = {
@@ -51,6 +52,7 @@ export type CreateCourseInput = {
   subjectId: ID;
   instructorId: ID;
   price: number;
+  hourlyRate: number;
 };
 
 export type CreateEventInput = {

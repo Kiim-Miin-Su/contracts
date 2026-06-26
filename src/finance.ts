@@ -29,6 +29,9 @@ export type Transaction = {
   occurredAt: ISODate;
 };
 
+// super_admin 승인 워크플로우
+export type ApprovalStatus = 'requested' | 'approved' | 'rejected';
+
 export type ExpenseCategory =
   | 'supplies' // 비품
   | 'equipment' // 기자재
@@ -47,6 +50,8 @@ export type Expense = {
   spentAt: ISODate;
   vendor?: string;
   memo?: string;
+  receiptUrl?: string; // 영수증 사진 (데모: data URL, 실제: 업로드 URL)
+  status: ApprovalStatus; // 요청 → super_admin 승인 시 출금 반영
 } & Audited;
 
 export type PayoutStatus = 'pending' | 'confirmed' | 'paid';
@@ -56,6 +61,9 @@ export type InstructorPayout = {
   instructorId: ID;
   periodStart: ISODate;
   periodEnd: ISODate;
+  sessionCount?: number; // 정산 대상 수업 수
+  totalMinutes?: number; // 총 시수(분)
   amount: number;
   status: PayoutStatus;
+  paidAt?: ISODate;
 };
