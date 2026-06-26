@@ -1,7 +1,7 @@
 // 요청(생성) DTO의 공유 형상. 백엔드 DTO class가 implements 하여 일치 보장.
-import type { ID } from './common';
+import type { ID, ISODate } from './common';
 import type { StudentStatus, ResidenceType } from './people';
-import type { PaymentMethod } from './finance';
+import type { PaymentMethod, ExpenseCategory } from './finance';
 
 export type CreateStudentInput = {
   name: string;
@@ -29,4 +29,13 @@ export type CreatePaymentInput = {
   payerParentId?: ID;
   amount: number;
   paymentMethod?: PaymentMethod;
+};
+
+export type CreateExpenseInput = {
+  category: ExpenseCategory;
+  title: string;
+  amount: number;
+  spentAt: ISODate;
+  vendor?: string;
+  memo?: string;
 };

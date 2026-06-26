@@ -1,4 +1,5 @@
 export * from './common';
+export * from './account';
 export * from './people';
 export * from './catalog';
 export * from './enrollment';
