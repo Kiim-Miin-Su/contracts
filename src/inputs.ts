@@ -2,7 +2,7 @@
 import type { ID, ISODate } from './common';
 import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
-import type { EventType } from './event';
+import type { EventType, EventPriority } from './event';
 
 export type CreateStudentInput = {
   name: string;
@@ -56,6 +56,7 @@ export type CreateCourseInput = {
 export type CreateEventInput = {
   title: string;
   type: EventType;
+  priority?: EventPriority; // 기본 normal
   startDate: ISODate;
   endDate: ISODate;
   allDay?: boolean;
