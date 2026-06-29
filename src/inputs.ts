@@ -6,6 +6,7 @@ import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
 import type { SessionStatus, RecurrenceScope } from './session';
+import type { AvailabilityOwner, AvailabilityKind } from './schedule';
 import type {
   CounselSource,
   CounselResult,
@@ -175,6 +176,27 @@ export type CreatePayoutInput = {
   periodStart: ISODate;
   periodEnd: ISODate;
   amount?: number; // 수동 보정 금액(미지정 시 시수×시급 자동 산정)
+};
+
+// ─────────── 스케줄 자원(강의실·가용/불가) ───────────
+export type CreateRoomInput = {
+  name: string;
+  buildingId?: ID;
+  capacity?: number;
+  color?: string;
+  isActive?: boolean;
+};
+
+export type UpsertAvailabilityInput = {
+  id?: ID; // 있으면 수정, 없으면 생성
+  ownerType: AvailabilityOwner;
+  ownerId: ID;
+  kind?: AvailabilityKind; // 기본 available
+  weekday: number; // 0(일)~6(토)
+  startTime: string; // 'HH:mm'
+  endTime: string;
+  effectiveFrom?: ISODate;
+  effectiveTo?: ISODate;
 };
 
 // ─────────── 이벤트 ───────────

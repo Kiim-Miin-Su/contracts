@@ -4,6 +4,7 @@ export * from './people';
 export * from './catalog';
 export * from './enrollment';
 export * from './session';
+export * from './schedule';
 export * from './finance';
 export * from './counsel';
 export * from './event';
