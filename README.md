@@ -81,3 +81,9 @@ src/
 ├─ event.ts       # AcademyEvent, EventType, EventPriority
 └─ inputs.ts      # Create*Input (요청 DTO 형상)
 ```
+
+## 변경 이력 (2026-06-29)
+
+- `ScheduleRow`: `studentIds`/`studentNames`(코호트) 추가.
+- `ScheduleResource`·`ScheduleResources`·`ScheduleCourseOption` 신규(자원 피커).
+- `CreateClassSessionInput`: `roomId`·`endTime`·`seriesId` 추가(추천→배정).

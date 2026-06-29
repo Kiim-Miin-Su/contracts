@@ -172,18 +172,22 @@
 - `3.5` 인터랙션 — ✅ 드래그 이동·시작/끝 리사이즈·클릭 상세 모달 + 백엔드 `PATCH /schedule/:id`(FK 검증 + 충돌 409/force) + **겹침 레인 표시(layoutLanes)**. ⚠️ 브라우저 인터랙션 QA 남음.
 - `3.6` 반복 시리즈 편집(scope) — ✅ **엔진·API 완료**: `PATCH`에 `scope`(this/this_and_following/all) → 같은 seriesId에 날짜·시간 델타 동반 적용, 시드도 주간반복 시리즈 단위. 캘린더 일원화(`/schedule`→`/calendar` redirect). ⚠️ UI 연동·QA 남음.
 - `5(엔진)` **슬롯 추천 `suggestSlots`** — ✅ **완료**: 가용 ∩ − 점유(강사/강의실 점유·불가 Block 제외) → 주별 후보 + Vitest 2종.
-- `4` 자원 리스트/개인 스케줄 — ⛔ **남음**: 학생/강사/강의실 목록 → 클릭 → 개인 스케줄(백엔드 per-resource GET + UI).
-- `5(UI)` 가용시간 입력 + 추천 화면 — ⛔ **남음**: availability 입력 UI + `suggestSlots` 결과 표시 + 추천→배정 흐름. (availability API는 구현됨)
-- `6` 시수/회계 연결 + 충돌 경고 UX — 🟡 **부분**: 충돌 경고 UX ✅ / 시수 집계(엔진·표 표시) ✅ / **강사 페이(payroll) 연결 남음**.
-- `7` 백엔드 모듈 + e2e — 🟡 **부분**: rooms·availability·schedule 모듈 ✅ + curl 검증 ✅ / **정식 jest+supertest e2e 남음**.
+- `4` 자원 리스트/개인 스케줄 — ✅ **완료**: 좌측 자원 레일(강사/학생/강의실) `GET /schedule/resources` → 선택 시 서버 필터(instructorId|roomId|studentId) 개인 스케줄 + 요약.
+- `5(UI)` 가용시간 입력 + 추천 화면 — ✅ **완료**: 가용·불가 CRUD(`PUT/DELETE /availability`) + **학생 중심 추천**(`recommendForStudent`, 불가 강사 주황 "조정 배정") + 강사∧학생 가용(`suggestPairSlots`) → `POST /schedule` 배정.
+- `6` 시수/회계 연결 + 충돌 경고 UX — 🟡 **부분**: 충돌 경고 UX ✅ / 시수 집계(엔진·표·헤더 표시) ✅ / **강사 페이(payroll) 연결 남음**.
+- `7` 백엔드 모듈 + e2e — ✅ **완료**: rooms·availability·schedule 모듈 + `GET /schedule/resources`·`POST /schedule`·studentId 필터 + **jest+supertest e2e**(schedule·availability·참조무결성).
+
+### 캘린더 탭 통합 (2026-06-29, 대표님 신규 요청)
+
+- `/calendar`로 **월간·주간·일간(강의실)·표** 통합. `/timetable`·`/schedule` redirect, 사이드바 "주간 표" 제거(주간 표=「표」 뷰로 흡수, 엑셀/CSV·시수).
+- 색상/필터/라벨에 **학생** 차원 추가(`ScheduleRow.studentIds/Names`, 코호트 status≠drop).
+- 불가시간(Block) **캘린더 밴드(회색 사선)** 표시.
+- 보안 점검: `backend/docs/SECURITY-review-2026-06-29.md`.
 
 ### 남은 작업 계획 (다음 스프린트)
 
-1. (5-UI) **가용시간 입력 + 슬롯 추천 화면** — 엔진(`suggestSlots`)은 완료. 가용·불가(Block) 입력 UI + 후보 표시 + 추천→배정 흐름.
-2. (4) **자원 리스트/개인 스케줄** — `GET /instructors|students|rooms/:id/schedule` + 목록·상세 UI(순환 flow).
-3. (6) **시수 → 강사 페이 연결** — `teachingHours`를 payroll 산정 입력으로 통합.
-4. (7) **백엔드 e2e** — jest+supertest(schedule list/patch/conflicts·rooms·availability·scope 동반편집).
-5. 보완 — 불가시간(Block) 캘린더 표시, 반복 편집 UI("이후 전부") 연동, 드래그 브라우저 QA, OpenAPI/`scheduling.md`/contracts 동기 유지.
+1. (6) **시수 → 강사 페이 연결** — `teachingHours`를 payroll 산정 입력으로 통합.
+2. 보완 — 가용 'available' 밴드(초록) 표시 옵션, 반복 편집 UI("이후 전부") 연동, 드래그 브라우저 QA, OpenAPI/`scheduling.md`/contracts 동기 유지.
 
 > 상세 점검 스냅샷: `docs/TBO-03_진행점검_2026-06-29.md` (코드 실측 기준)
 

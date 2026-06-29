@@ -77,10 +77,13 @@ export type CreateRoadmapInput = {
 export type CreateClassSessionInput = {
   courseId: ID;
   instructorId: ID;
+  roomId?: ID; // 강의실(스케줄 v5) — 추천→배정·일간뷰
   sessionDate: ISODate;
   startTime?: string; // 'HH:mm'
+  endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생)
   durationMinutes: number;
   topic?: string;
+  seriesId?: ID; // 반복 시리즈로 묶을 때
 };
 
 // 기간 + 요일 반복 생성(시리즈)

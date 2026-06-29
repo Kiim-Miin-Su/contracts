@@ -55,4 +55,30 @@ export type ScheduleRow = ClassSession & {
   instructorName: string;
   roomName?: string;
   color?: string; // 과목 색(없으면 프론트 해시 색)
+  // 코호트(코스 수강생) — 학생 차원 색/라벨·필터·개인 스케줄용(enrollment status != drop만)
+  studentIds: ID[];
+  studentNames: string[];
+};
+
+// 자원 피커(좌측 레일·필터)용 경량 읽기모델. GET /schedule/resources 응답.
+export type ScheduleResource = {
+  type: AvailabilityOwner; // 'student' | 'instructor' | 'room'
+  id: ID;
+  name: string;
+  color?: string;
+  sub?: string; // 보조 라벨(과목·학년·정원 등)
+};
+// 배정(추천→세션 생성) 폼용 코스 옵션 — 스케줄 FK 유니버스와 정렬.
+export type ScheduleCourseOption = {
+  id: ID;
+  name: string;
+  instructorId: ID;
+  subjectName: string;
+  color?: string;
+};
+export type ScheduleResources = {
+  instructors: ScheduleResource[];
+  rooms: ScheduleResource[];
+  students: ScheduleResource[];
+  courses: ScheduleCourseOption[];
 };
