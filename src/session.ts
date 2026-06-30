@@ -18,6 +18,7 @@ export type ClassSession = {
   status: SessionStatus;
   topic?: string;
   memo?: string; // 자유 메모(캘린더 상세에서 편집)
+  color?: string; // 세션 색상 라벨(오버라이드). 미지정 시 코스 색 → 과목 색.
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

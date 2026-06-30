@@ -64,6 +64,7 @@ export type CreateCourseInput = {
   instructorId: ID;
   price: number;
   hourlyRate: number;
+  color?: string; // 캘린더 색상 라벨(개설 시 선택)
 };
 
 export type CreateRoadmapInput = {
@@ -84,6 +85,7 @@ export type CreateClassSessionInput = {
   durationMinutes: number;
   topic?: string;
   memo?: string;
+  color?: string;
   seriesId?: ID; // 반복 시리즈로 묶을 때
 };
 
