@@ -73,8 +73,10 @@ export type ScheduleCourseOption = {
   id: ID;
   name: string;
   instructorId: ID;
+  instructorName?: string;
   subjectName: string;
   color?: string;
+  durationMinutes: number; // 코스 진행시간(세션에서 파생, 없으면 기본값)
 };
 export type ScheduleResources = {
   instructors: ScheduleResource[];
