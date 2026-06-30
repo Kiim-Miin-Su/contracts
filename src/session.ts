@@ -32,12 +32,23 @@ export type Attendance = {
 
 export type ReportStatus = 'draft' | 'submitted' | 'sent';
 
+// TBO-05 정산 게이트용 승인 라이프사이클. 'approved'가 시수 적격 게이트.
+// (draft→submitted→approved / rejected). 알림 발송 단계('sent')와 분리.
+export type ReportApprovalStatus = 'draft' | 'submitted' | 'approved' | 'rejected';
+
 export type SessionReport = {
   id: ID;
   sessionId: ID;
   studentId: ID;
   instructorId: ID;
+  subjectId?: ID; // 과목 스냅샷(작성 시점) — TBO-05
   content: string;
   homework?: string;
   status: ReportStatus;
+  // 승인 워크플로우(TBO-05) — status와 별개로 정산 적격 판정에 사용.
+  approvalStatus?: ReportApprovalStatus;
+  submittedAt?: ISODate;
+  approvedAt?: ISODate;
+  approvedBy?: ID;
+  rejectedReason?: string;
 };
