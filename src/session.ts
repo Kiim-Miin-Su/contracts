@@ -17,6 +17,7 @@ export type ClassSession = {
   durationMinutes: number;
   status: SessionStatus;
   topic?: string;
+  memo?: string; // 자유 메모(캘린더 상세에서 편집)
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

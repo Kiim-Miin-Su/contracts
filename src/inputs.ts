@@ -83,6 +83,7 @@ export type CreateClassSessionInput = {
   endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생)
   durationMinutes: number;
   topic?: string;
+  memo?: string;
   seriesId?: ID; // 반복 시리즈로 묶을 때
 };
 
