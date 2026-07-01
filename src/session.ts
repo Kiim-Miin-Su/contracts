@@ -19,6 +19,7 @@ export type ClassSession = {
   topic?: string;
   memo?: string; // 자유 메모(캘린더 상세에서 편집)
   color?: string; // 세션 색상 라벨(오버라이드). 미지정 시 코스 색 → 과목 색.
+  makeupForSessionId?: ID; // 보강 세션이면 원본(취소·미진행) 세션 id를 가리킴(보강 이력 추적)
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

@@ -8,4 +8,6 @@ export * from './schedule';
 export * from './finance';
 export * from './counsel';
 export * from './event';
+export * from './notification';
+export * from './workload';
 export * from './inputs';
