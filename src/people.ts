@@ -10,6 +10,7 @@ export type Student = {
   grade?: number; // 1~12
   phone?: string;
   status: StudentStatus;
+  country?: string; // ISO 3166-1 alpha-2(예: KR·US·VN) — 해외 학생 시차 계산·국가 필터(v0.1.11)
   schoolName?: string;
   residenceType?: ResidenceType;
   memo?: string;
