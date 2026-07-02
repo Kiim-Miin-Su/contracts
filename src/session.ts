@@ -2,6 +2,9 @@ import type { ID, ISODate } from './common';
 
 export type SessionStatus = 'scheduled' | 'held' | 'canceled' | 'no_show' | 'makeup';
 
+// 강사 본인 출결(세션 status와 별개 — status는 일정 상태, 이건 강사의 참석 기록). '지각' 포함.
+export type InstructorAttendanceStatus = 'present' | 'late' | 'absent' | 'makeup';
+
 // 반복 일정 편집 적용 범위(구글 캘린더식)
 export type RecurrenceScope = 'this' | 'this_and_following' | 'all';
 
@@ -20,6 +23,7 @@ export type ClassSession = {
   memo?: string; // 자유 메모(캘린더 상세에서 편집)
   color?: string; // 세션 색상 라벨(오버라이드). 미지정 시 코스 색 → 과목 색.
   makeupForSessionId?: ID; // 보강 세션이면 원본(취소·미진행) 세션 id를 가리킴(보강 이력 추적)
+  instructorAttendance?: InstructorAttendanceStatus; // 강사 출결(출석/지각/결석/보강) — 강사 출결 현황 집계용
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';
