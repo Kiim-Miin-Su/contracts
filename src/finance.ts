@@ -27,6 +27,12 @@ export type Transaction = {
   amount: number;
   method?: string;
   occurredAt: ISODate;
+  // 출처 역참조(어느 문서에서 발생한 입·출금인지) — 자산 추적·집계의 조인 키.
+  //  수납(markPaid)=paymentId · 정산 지급(pay)=payoutId · 지출 승인(approve)=expenseId.
+  //  (v0.1.10, 2026-07-02 자산화 점검 — dbml transactions의 payment_id/payout_id/expense_id와 정합)
+  paymentId?: ID;
+  payoutId?: ID;
+  expenseId?: ID;
 };
 
 // super_admin 승인 워크플로우
