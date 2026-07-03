@@ -24,6 +24,9 @@ export type ClassSession = {
   color?: string; // 세션 색상 라벨(오버라이드). 미지정 시 코스 색 → 과목 색.
   makeupForSessionId?: ID; // 보강 세션이면 원본(취소·미진행) 세션 id를 가리킴(보강 이력 추적)
   instructorAttendance?: InstructorAttendanceStatus; // 강사 출결(출석/지각/결석/보강) — 강사 출결 현황 집계용
+  // [v0.1.13] 명시 코호트(피드백 2026-07-03) — 수업 추가 시 학생 선택(여러 명=단체).
+  //  미지정 = 기존대로 코스 활성 수강생 전원 파생. 지정 시 그 코스 활성 수강생의 부분집합만 허용(무결성).
+  studentIds?: ID[];
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';
