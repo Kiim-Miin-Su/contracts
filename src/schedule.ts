@@ -84,3 +84,28 @@ export type ScheduleResources = {
   students: ScheduleResource[];
   courses: ScheduleCourseOption[];
 };
+
+// ── 캘린더 뷰 프리셋(TBO-12 P1, v0.1.12) ──────────────────────
+// 필터·스플릿·국가(시차) 조합을 이름으로 저장 — "미국 학생 주간"처럼 반복 조회를 원클릭화.
+// [자산화] localStorage가 아닌 DB 컬렉션(calendar_view_presets): 직원 공용 프리셋 = 사내 자산.
+// paneCountry는 표(스플릿)별 override — 'KR'을 저장하면 그 표는 KST 고정(강제 null 대신 코드로 직렬화).
+export type CalendarViewPreset = {
+  id: ID;
+  name: string;
+  view: 'month' | 'week' | 'day';
+  periodFrom?: ISODate; // 기간 뷰(from~to) — 없으면 주간/월간 기본
+  periodTo?: ISODate;
+  instructorIds: ID[];
+  studentIds: ID[];
+  roomIds: ID[];
+  subjects: string[];
+  statuses: string[]; // StatusFilter('present'|'late'|'canceled'|'makeup')
+  groupOnly: boolean;
+  q?: string;
+  colorBy?: string; // 'subject'|'instructor'|'room'|'student'
+  countryCode?: string; // 전역 시차 국가(lib/domain/tz COUNTRIES 코드)
+  paneCountryInstructor?: string; // 강사 표 override
+  paneCountryStudent?: string; // 학생 표 override
+};
+
+export type CreateViewPresetInput = Omit<CalendarViewPreset, 'id'>;

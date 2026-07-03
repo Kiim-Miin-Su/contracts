@@ -58,6 +58,7 @@ export type Expense = {
   memo?: string;
   receiptUrl?: string; // 영수증 사진 (데모: data URL, 실제: 업로드 URL)
   status: ApprovalStatus; // 요청 → super_admin 승인 시 출금 반영
+  rejectedReason?: string; // 반려 사유(v0.1.12 — 자산화: 클라 임시 보관 → 서버 저장)
 } & Audited;
 
 // 'rejected' = 관리자 반려(연결 세션 회수 → 재산정). TBO-05에서 추가.

@@ -57,3 +57,12 @@ export type SessionReport = {
   approvedBy?: ID;
   rejectedReason?: string;
 };
+
+// ── 리포트 템플릿(v0.1.12) ─────────────────────────────────────
+// [자산화] 강사가 자주 쓰는 리포트 내용/숙제 — zustand(휘발)에서 DB 컬렉션(report_templates)으로 이관.
+export type ReportTemplate = {
+  id: ID;
+  name: string;
+  content: string;
+  homework?: string;
+};
