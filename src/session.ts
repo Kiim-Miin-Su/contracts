@@ -21,7 +21,7 @@ export type ClassSession = {
   roomId?: ID; // 강의실(스케줄 v5) — 일간뷰·이중예약·capacity
   sessionDate: ISODate;
   startTime?: string; // 'HH:mm' 시작 시각 — 주간(시간표) 캘린더용
-  endTime?: string; // 'HH:mm' 종료(미지정 시 start+duration 파생)
+  endTime?: string; // 'HH:mm' 종료(미지정 시 start+duration 파생). [R-9] 자정 크로스(익일 종료) 세션은 미저장 — durationMinutes로 파생(단일 레코드·sessionDate=시작일)
   durationMinutes: number;
   status: SessionStatus;
   topic?: string;

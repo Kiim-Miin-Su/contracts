@@ -95,7 +95,7 @@ export type CreateClassSessionInput = {
   roomId?: ID; // 강의실(스케줄 v5) — 추천→배정·일간뷰
   sessionDate: ISODate;
   startTime: string; // 'HH:mm'
-  endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생)
+  endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생). [R-9] startTime보다 이르면 익일 종료(자정 크로스)로 해석
   durationMinutes?: number; // endTime 없을 때 사용(기본 60)
   studentIds?: ID[]; // 명시 코호트(v0.1.13) — 코스 활성 수강생 부분집합
   topic?: string;
