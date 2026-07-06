@@ -100,6 +100,7 @@ export type CalendarViewPreset = {
   roomIds: ID[];
   subjects: string[];
   statuses: string[]; // StatusFilter('present'|'late'|'canceled'|'makeup')
+  kinds?: string[]; // [v0.1.14 #2] SessionKind('class'|'level_test'|'counsel') — 전역 종류 필터(미지정=전체)
   groupOnly: boolean;
   q?: string;
   colorBy?: string; // 'subject'|'instructor'|'room'|'student'
