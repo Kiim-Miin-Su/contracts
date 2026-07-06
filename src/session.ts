@@ -8,6 +8,11 @@ export type InstructorAttendanceStatus = 'present' | 'late' | 'absent' | 'makeup
 // 반복 일정 편집 적용 범위(구글 캘린더식)
 export type RecurrenceScope = 'this' | 'this_and_following' | 'all';
 
+// [v0.1.14] 세션 종류(캘린더 필터 축) — 구 erd schedule_type 어휘 승계(TBO-16 dbml v8 §26).
+//  counsel = 수업 캘린더 내 상담 일정 표기용(상담 카드 counsel_forms 도메인과 별개).
+//  시수·정산 규칙은 kind 무관(status held·makeup 기준 — Q1 결정 2026-07-06).
+export type SessionKind = 'class' | 'level_test' | 'counsel';
+
 export type ClassSession = {
   id: ID;
   seriesId?: ID; // 반복 생성 시 동일 시리즈 묶음(시리즈 편집용)
@@ -27,6 +32,9 @@ export type ClassSession = {
   // [v0.1.13] 명시 코호트(피드백 2026-07-03) — 수업 추가 시 학생 선택(여러 명=단체).
   //  미지정 = 기존대로 코스 활성 수강생 전원 파생. 지정 시 그 코스 활성 수강생의 부분집합만 허용(무결성).
   studentIds?: ID[];
+  // [v0.1.14 — TBO-16] 종류(미지정=class 하위호환)·세션 단건 가격(상담 등 — 코스 정가 courses.price와 별개)
+  kind?: SessionKind;
+  price?: number;
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

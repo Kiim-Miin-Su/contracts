@@ -5,7 +5,7 @@ import type { ID, ISODate } from './common';
 import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
-import type { SessionStatus, RecurrenceScope } from './session';
+import type { SessionStatus, RecurrenceScope, SessionKind, InstructorAttendanceStatus } from './session';
 import type { AvailabilityOwner, AvailabilityKind } from './schedule';
 import type {
   CounselSource,
@@ -75,18 +75,25 @@ export type CreateRoadmapInput = {
 };
 
 // ─────────── 수업/출석/보고서 ───────────
+// [v0.1.14] BE CreateScheduleDto와 정합(implements 강제 — TBO-16 감사 A1 해소):
+//  instructorId 선택(미지정=코스 기본 강사)·startTime 필수·studentIds·status·force·kind·price.
 export type CreateClassSessionInput = {
   courseId: ID;
-  instructorId: ID;
+  instructorId?: ID; // 미지정 시 코스 기본 강사
   roomId?: ID; // 강의실(스케줄 v5) — 추천→배정·일간뷰
   sessionDate: ISODate;
-  startTime?: string; // 'HH:mm'
+  startTime: string; // 'HH:mm'
   endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생)
-  durationMinutes: number;
+  durationMinutes?: number; // endTime 없을 때 사용(기본 60)
+  studentIds?: ID[]; // 명시 코호트(v0.1.13) — 코스 활성 수강생 부분집합
   topic?: string;
   memo?: string;
   color?: string;
   seriesId?: ID; // 반복 시리즈로 묶을 때
+  status?: SessionStatus;
+  force?: boolean; // 충돌 무시 강제(기본 false → 409)
+  kind?: SessionKind; // [v0.1.14] 종류(기본 class)
+  price?: number; // [v0.1.14] 세션 단건 가격(상담 등 — 코스 정가와 별개)
 };
 
 // 기간 + 요일 반복 생성(시리즈)
@@ -101,13 +108,39 @@ export type CreateRecurringInput = {
   topic?: string;
 };
 
+// [v0.1.14] BE UpdateScheduleDto와 정합(모든 필드 선택 — 이동·리사이즈·상세편집 공용).
 export type UpdateClassSessionInput = {
   sessionDate?: ISODate;
   startTime?: string;
+  endTime?: string;
   durationMinutes?: number;
+  studentIds?: ID[]; // 명시 코호트(v0.1.13)
+  roomId?: ID;
+  instructorId?: ID;
+  courseId?: ID;
   topic?: string;
+  memo?: string;
+  color?: string;
   status?: SessionStatus;
+  instructorAttendance?: InstructorAttendanceStatus;
   scope?: RecurrenceScope; // 시리즈 편집 적용 범위
+  force?: boolean;
+  kind?: SessionKind; // [v0.1.14]
+  price?: number; // [v0.1.14]
+};
+
+// [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.
+export type CreateScheduleRequestInput = {
+  courseId: ID;
+  instructorId?: ID; // 미지정 시 코스 기본 강사
+  roomId?: ID;
+  sessionDate: ISODate;
+  startTime: string; // 'HH:mm'
+  endTime?: string;
+  durationMinutes?: number;
+  studentIds?: ID[];
+  topic?: string;
+  kind?: SessionKind;
 };
 
 export type UpsertSessionReportInput = {

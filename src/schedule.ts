@@ -1,6 +1,6 @@
 // 스케줄 엔진(Lantiv형) 자원: 강의실 · 가용/불가 시간. (상세: docs/scheduling.md)
 import type { ID, ISODate } from './common';
-import type { ClassSession } from './session';
+import type { ClassSession, SessionKind } from './session';
 
 // 강의실(Room/Location). 일간 뷰 컬럼 · 이중예약/capacity 충돌 기준.
 export type Room = {
@@ -109,3 +109,44 @@ export type CalendarViewPreset = {
 };
 
 export type CreateViewPresetInput = Omit<CalendarViewPreset, 'id'>;
+
+// ── 강사 수업 요청 → 매니저 승인/반려 (TBO-16 #9, v0.1.14) ──────
+// 평면 컬럼(JSON payload 아님) — 요청 시점에도 course/instructor/room FK·코호트 무결성 검증.
+// 승인 = 기존 createSession 경로 재사용(충돌 409·force 재검사) 후 createdSessionId 역참조(transactions 패턴).
+export type ScheduleRequestStatus = 'pending' | 'approved' | 'rejected';
+
+export type ScheduleRequest = {
+  id: ID;
+  requesterId: ID; // 요청자(강사) = JWT sub
+  courseId: ID;
+  instructorId: ID; // 수업 담당 강사(요청 시 본인 — 백엔드 강제는 TBO-06 정합 후속)
+  roomId?: ID;
+  sessionDate: ISODate;
+  startTime: string; // 'HH:mm' — KST 단일 진실원(세션과 동일 규약)
+  endTime?: string;
+  durationMinutes: number;
+  kind?: SessionKind;
+  topic?: string;
+  studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
+  status: ScheduleRequestStatus;
+  reason?: string; // 반려 사유(반려 시 필수 — Q2 결정 2026-07-06)
+  decidedBy?: ID; // 승인/반려한 매니저
+  decidedAt?: string; // ISO datetime
+  createdSessionId?: ID; // 승인 산출물 세션 역참조
+};
+
+// ── 범용 변경 이력 audit_log (TBO-16 #7, v0.1.14) ──────────────
+// 누가·언제·무엇을·어떻게. 기록: 세션 CRUD·요청 승인/반려·availability 변경(Q3).
+// delete는 changes에 before 전체 스냅샷(복원 근거), update는 변경 필드 diff만.
+export type AuditAction = 'create' | 'update' | 'delete' | 'approve' | 'reject' | 'status_change';
+
+export type AuditLog = {
+  id: ID;
+  entity: string; // 'class_sessions' | 'schedule_requests' | 'availability_blocks' | ...
+  entityId: ID;
+  action: AuditAction;
+  actorId: ID; // JWT sub
+  at: string; // ISO datetime
+  changes?: Record<string, { before?: unknown; after?: unknown }>;
+  reason?: string;
+};
