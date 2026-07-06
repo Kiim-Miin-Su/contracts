@@ -13,6 +13,10 @@ export type RecurrenceScope = 'this' | 'this_and_following' | 'all';
 //  시수·정산 규칙은 kind 무관(status held·makeup 기준 — Q1 결정 2026-07-06).
 export type SessionKind = 'class' | 'level_test' | 'counsel';
 
+// [v0.1.16] 수업방식(대면/비대면) — 캘린더 필터 축(구 '종류' 필터 대체, 대표 지시 2026-07-06).
+//  강의실 유무와 독립(비대면이어도 강의실 배정 가능 — 장비/녹화실 등). 미지정=in_person 하위호환.
+export type SessionMode = 'in_person' | 'online';
+
 export type ClassSession = {
   id: ID;
   seriesId?: ID; // 반복 생성 시 동일 시리즈 묶음(시리즈 편집용)
@@ -35,6 +39,8 @@ export type ClassSession = {
   // [v0.1.14 — TBO-16] 종류(미지정=class 하위호환)·세션 단건 가격(상담 등 — 코스 정가 courses.price와 별개)
   kind?: SessionKind;
   price?: number;
+  // [v0.1.16] 수업방식(미지정=in_person 하위호환) — 대면/비대면 필터
+  mode?: SessionMode;
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

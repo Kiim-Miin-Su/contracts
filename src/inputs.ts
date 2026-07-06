@@ -5,7 +5,7 @@ import type { ID, ISODate } from './common';
 import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
-import type { SessionStatus, RecurrenceScope, SessionKind, InstructorAttendanceStatus } from './session';
+import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, InstructorAttendanceStatus } from './session';
 import type { AvailabilityOwner, AvailabilityKind } from './schedule';
 import type {
   CounselSource,
@@ -106,6 +106,7 @@ export type CreateClassSessionInput = {
   force?: boolean; // 충돌 무시 강제(기본 false → 409)
   kind?: SessionKind; // [v0.1.14] 종류(기본 class)
   price?: number; // [v0.1.14] 세션 단건 가격(상담 등 — 코스 정가와 별개)
+  mode?: SessionMode; // [v0.1.16] 수업방식(기본 in_person)
 };
 
 // 기간 + 요일 반복 생성(시리즈)
@@ -139,6 +140,7 @@ export type UpdateClassSessionInput = {
   force?: boolean;
   kind?: SessionKind; // [v0.1.14]
   price?: number; // [v0.1.14]
+  mode?: SessionMode; // [v0.1.16] 수업방식
 };
 
 // [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.
