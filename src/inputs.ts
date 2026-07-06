@@ -27,6 +27,8 @@ export type CreateStudentInput = {
   status?: StudentStatus;
   memo?: string;
   webId?: string;
+  // [v0.1.14 — A1 drift 보정] 국가·시차 기능(v0.1.11)의 Student.country가 Input에 누락돼 있었음.
+  country?: string; // ISO 3166-1 alpha-2(예: KR·US·VN)
 };
 
 export type UpdateStudentInput = Partial<CreateStudentInput>;
@@ -43,6 +45,16 @@ export type ParentLinkInput = {
 
 // 학부모 단독 등록(POST /parents) — 연결할 학생 지정 필요
 export type CreateParentInput = ParentLinkInput & { studentId: ID };
+
+// [v0.1.14 — A1] 기존 보호자 ↔ 학생 연결(POST /parents/link — 형제 케이스).
+//  ParentLinkInput(신규 학생 등록 임베드용)과 다른 계약이라 별도 타입으로 명문화.
+export type LinkParentInput = {
+  parentId: ID;
+  studentId: ID;
+  relation?: string;
+  isPayer?: boolean;
+  isPrimary?: boolean;
+};
 
 // ─────────── 수강/카탈로그/로드맵 ───────────
 export type CreateEnrollmentInput = {
@@ -148,6 +160,9 @@ export type UpsertSessionReportInput = {
   studentId: ID;
   content?: string;
   homework?: string;
+  // [v0.1.14 — A1 drift 보정] BE CreateReportDto·FE api.reports.create가 이미 쓰던 필드를 계약에 편입.
+  instructorId?: ID; // 미지정 시 세션 강사로 채움
+  status?: 'draft' | 'submitted'; // 기본 submitted(승인 요청)
 };
 
 // ─────────── 상담 ───────────
