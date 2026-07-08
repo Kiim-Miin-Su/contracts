@@ -87,3 +87,5 @@ src/
 - `ScheduleRow`: `studentIds`/`studentNames`(코호트) 추가.
 - `ScheduleResource`·`ScheduleResources`·`ScheduleCourseOption` 신규(자원 피커).
 - `CreateClassSessionInput`: `roomId`·`endTime`·`seriesId` 추가(추천→배정).
+
+과거 TBO 진행 메모는 `docs/archive/`에 보존되어 있습니다. 현재 프로젝트 문서 입구는 루트 `docs/README.md`와 `docs/CODEX.md`입니다.

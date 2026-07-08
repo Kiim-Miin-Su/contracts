@@ -182,14 +182,14 @@
 - `/calendar`로 **월간·주간·일간(강의실)·표** 통합. `/timetable`·`/schedule` redirect, 사이드바 "주간 표" 제거(주간 표=「표」 뷰로 흡수, 엑셀/CSV·시수).
 - 색상/필터/라벨에 **학생** 차원 추가(`ScheduleRow.studentIds/Names`, 코호트 status≠drop).
 - 불가시간(Block) **캘린더 밴드(회색 사선)** 표시.
-- 보안 점검: `backend/docs/SECURITY-review-2026-06-29.md`.
+- 보안 점검: `backend/docs/archive/SECURITY-review-2026-06-29.md`.
 
 ### 남은 작업 계획 (다음 스프린트)
 
 1. (6) **시수 → 강사 페이 연결** — `teachingHours`를 payroll 산정 입력으로 통합.
 2. 보완 — 가용 'available' 밴드(초록) 표시 옵션, 반복 편집 UI("이후 전부") 연동, 드래그 브라우저 QA, OpenAPI/`scheduling.md`/contracts 동기 유지.
 
-> 상세 점검 스냅샷: `docs/TBO-03_진행점검_2026-06-29.md` (코드 실측 기준)
+> 상세 점검 스냅샷: `docs/archive/tbo-history/TBO-03_진행점검_2026-06-29.md` (코드 실측 기준)
 
 ## 4. 테스트 (요구 #8 — 필수)
 
@@ -243,7 +243,7 @@
 - 패널 재배치: **좌=학생→강사 추천 / 우=접이식 유저별 스케줄(단일 선택→개인 스케줄)**.
 - 사이드바 유저 표시를 `currentRole`에 바인딩(역할↔표시 무결성), 강사/학생명 백엔드 연동.
 - 내보내기 CSV→**PNG/JPEG**(html-to-image), 요청·스케줄 **콘솔 로깅**, Vercel 배포(서버리스 + contracts github 의존성), Swagger 서버리스 CDN 로드.
-- 역할 권한 매트릭스: `backend/docs/SECURITY-review-2026-06-29.md` 부록(2026-06-30).
+- 역할 권한 매트릭스: `backend/docs/archive/SECURITY-review-2026-06-29.md` 부록(2026-06-30).
 
 > Vitest 38 pass · 백엔드 e2e 15 pass · FE/BE 타입체크 0.
 
