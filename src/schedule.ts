@@ -107,9 +107,26 @@ export type CalendarViewPreset = {
   countryCode?: string; // 전역 시차 국가(lib/domain/tz COUNTRIES 코드)
   paneCountryInstructor?: string; // 강사 표 override
   paneCountryStudent?: string; // 학생 표 override
+  // v0.1.17: 실제 작업 뷰 저장. 기존 필터만 저장하면 split layout/order/timezone state가 유실되어
+  // "뷰 저장"이 캘린더 비교 작업을 복원하지 못했다. 모두 optional로 두어 기존 프리셋과 호환한다.
+  modeFilters?: string[]; // SessionModeFilter[] — in_person|online
+  kstFixed?: boolean; // true면 모든 표를 00-24 KST 축으로 정렬하고 해외 현지시각은 칩에 병기
+  compactCols?: boolean;
+  manualPanes?: CalendarViewPresetPane[];
 };
 
 export type CreateViewPresetInput = Omit<CalendarViewPreset, 'id'>;
+
+export type CalendarViewPresetPane = {
+  uid?: ID;
+  dim: 'instructor' | 'student' | 'room' | 'subject';
+  ids: ID[];
+  countryCode?: string;
+  modeFilters?: string[];
+  rangeFrom?: ISODate;
+  rangeTo?: ISODate;
+  pickedDates?: ISODate[];
+};
 
 // ── 강사 수업 요청 → 매니저 승인/반려 (TBO-16 #9, v0.1.14) ──────
 // 평면 컬럼(JSON payload 아님) — 요청 시점에도 course/instructor/room FK·코호트 무결성 검증.
