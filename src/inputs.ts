@@ -6,7 +6,7 @@ import type { StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
 import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, InstructorAttendanceStatus } from './session';
-import type { AvailabilityOwner, AvailabilityKind } from './schedule';
+import type { AvailabilityOwner, AvailabilityKind, ScheduleRequestKind } from './schedule';
 import type {
   CounselSource,
   CounselResult,
@@ -145,16 +145,26 @@ export type UpdateClassSessionInput = {
 
 // [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.
 export type CreateScheduleRequestInput = {
-  courseId: ID;
+  requestKind?: ScheduleRequestKind; // 기본 session_create
+  courseId?: ID;
   instructorId?: ID; // 미지정 시 코스 기본 강사
   roomId?: ID;
-  sessionDate: ISODate;
-  startTime: string; // 'HH:mm'
+  sessionDate?: ISODate;
+  startTime?: string; // 'HH:mm'
   endTime?: string;
   durationMinutes?: number;
   studentIds?: ID[];
   topic?: string;
   kind?: SessionKind;
+  targetAvailabilityId?: ID;
+  availabilityOwnerType?: AvailabilityOwner;
+  availabilityOwnerId?: ID;
+  availabilityKind?: AvailabilityKind;
+  availabilityWeekday?: number;
+  availabilityStartTime?: string;
+  availabilityEndTime?: string;
+  availabilityEffectiveFrom?: ISODate;
+  availabilityEffectiveTo?: ISODate;
 };
 
 export type UpsertSessionReportInput = {

@@ -14,7 +14,7 @@ export type Room = {
 
 export type AvailabilityOwner = 'student' | 'instructor' | 'room';
 // available = 가용(슬롯 추천 화이트리스트), unavailable = 불가시간(Block, 고정 회색/검정)
-export type AvailabilityKind = 'available' | 'unavailable';
+export type AvailabilityKind = 'available' | 'unavailable' | 'online_only';
 
 // 가용/불가 시간 블록 — 학생·강사·강의실 공통. 주간 반복 + (선택)기간 한정.
 export type AvailabilityBlock = {
@@ -132,20 +132,33 @@ export type CalendarViewPresetPane = {
 // 평면 컬럼(JSON payload 아님) — 요청 시점에도 course/instructor/room FK·코호트 무결성 검증.
 // 승인 = 기존 createSession 경로 재사용(충돌 409·force 재검사) 후 createdSessionId 역참조(transactions 패턴).
 export type ScheduleRequestStatus = 'pending' | 'approved' | 'rejected';
+export type ScheduleRequestKind = 'session_create' | 'availability_upsert' | 'availability_delete';
 
 export type ScheduleRequest = {
   id: ID;
+  requestKind?: ScheduleRequestKind; // 기본 session_create. availability_*는 강사 가용시간 변경 승인 요청.
   requesterId: ID; // 요청자(강사) = JWT sub
-  courseId: ID;
-  instructorId: ID; // 수업 담당 강사(요청 시 본인 — 백엔드 강제는 TBO-06 정합 후속)
+  courseId?: ID;
+  instructorId?: ID; // 수업 담당 강사(요청 시 본인 — 백엔드 강제는 TBO-06 정합 후속)
   roomId?: ID;
-  sessionDate: ISODate;
-  startTime: string; // 'HH:mm' — KST 단일 진실원(세션과 동일 규약)
+  sessionDate?: ISODate;
+  startTime?: string; // 'HH:mm' — KST 단일 진실원(세션과 동일 규약)
   endTime?: string;
-  durationMinutes: number;
+  durationMinutes?: number;
   kind?: SessionKind;
   topic?: string;
   studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
+  targetAvailabilityId?: ID;
+  availabilityOwnerType?: AvailabilityOwner;
+  availabilityOwnerId?: ID;
+  availabilityKind?: AvailabilityKind;
+  availabilityWeekday?: number;
+  availabilityStartTime?: string;
+  availabilityEndTime?: string;
+  availabilityEffectiveFrom?: ISODate;
+  availabilityEffectiveTo?: ISODate;
+  impactSessionIds?: ID[];
+  changeSummary?: string;
   status: ScheduleRequestStatus;
   reason?: string; // 반려 사유(반려 시 필수 — Q2 결정 2026-07-06)
   decidedBy?: ID; // 승인/반려한 매니저
