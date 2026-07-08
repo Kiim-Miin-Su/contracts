@@ -1,6 +1,6 @@
 // 스케줄 엔진(Lantiv형) 자원: 강의실 · 가용/불가 시간. (상세: docs/scheduling.md)
 import type { ID, ISODate } from './common';
-import type { ClassSession, SessionKind } from './session';
+import type { ClassSession, SessionKind, SessionMode } from './session';
 
 // 강의실(Room/Location). 일간 뷰 컬럼 · 이중예약/capacity 충돌 기준.
 export type Room = {
@@ -146,6 +146,7 @@ export type ScheduleRequest = {
   endTime?: string;
   durationMinutes?: number;
   kind?: SessionKind;
+  mode?: SessionMode; // [C2D 2026-07-08] 수업방식 보존 — 요청→승인 세션까지 전달(미지정=in_person)
   topic?: string;
   studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
   targetAvailabilityId?: ID;

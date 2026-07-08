@@ -156,6 +156,7 @@ export type CreateScheduleRequestInput = {
   studentIds?: ID[];
   topic?: string;
   kind?: SessionKind;
+  mode?: SessionMode; // [C2D] 수업방식 보존(session_create)
   targetAvailabilityId?: ID;
   availabilityOwnerType?: AvailabilityOwner;
   availabilityOwnerId?: ID;
