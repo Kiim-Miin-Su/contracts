@@ -67,6 +67,8 @@ export type ScheduleResource = {
   name: string;
   color?: string;
   sub?: string; // 보조 라벨(과목·학년·정원 등)
+  countryCode?: string; // owner 국가/시차 표시용. 예: KR, US, GB, US-W.
+  timeZone?: string; // IANA timezone. countryCode보다 세밀한 owner timezone이 있을 때 사용.
 };
 // 배정(추천→세션 생성) 폼용 코스 옵션 — 스케줄 FK 유니버스와 정렬.
 export type ScheduleCourseOption = {
