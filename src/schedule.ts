@@ -132,12 +132,13 @@ export type CalendarViewPresetPane = {
 // 평면 컬럼(JSON payload 아님) — 요청 시점에도 course/instructor/room FK·코호트 무결성 검증.
 // 승인 = 기존 createSession 경로 재사용(충돌 409·force 재검사) 후 createdSessionId 역참조(transactions 패턴).
 export type ScheduleRequestStatus = 'pending' | 'approved' | 'rejected';
-export type ScheduleRequestKind = 'session_create' | 'availability_upsert' | 'availability_delete';
+export type ScheduleRequestKind = 'session_create' | 'session_update' | 'availability_upsert' | 'availability_delete';
 
 export type ScheduleRequest = {
   id: ID;
   requestKind?: ScheduleRequestKind; // 기본 session_create. availability_*는 강사 가용시간 변경 승인 요청.
   requesterId: ID; // 요청자(강사) = JWT sub
+  targetSessionId?: ID; // session_update 대상 세션
   courseId?: ID;
   instructorId?: ID; // 수업 담당 강사(요청 시 본인 — 백엔드 강제는 TBO-06 정합 후속)
   roomId?: ID;

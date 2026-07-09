@@ -146,6 +146,7 @@ export type UpdateClassSessionInput = {
 // [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.
 export type CreateScheduleRequestInput = {
   requestKind?: ScheduleRequestKind; // 기본 session_create
+  targetSessionId?: ID; // session_update 대상 세션
   courseId?: ID;
   instructorId?: ID; // 미지정 시 코스 기본 강사
   roomId?: ID;
