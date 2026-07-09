@@ -158,6 +158,8 @@ export type CreateScheduleRequestInput = {
   topic?: string;
   kind?: SessionKind;
   mode?: SessionMode; // [C2D] 수업방식 보존(session_create)
+  requestReason?: string; // 요청자가 제출한 사유(반려 사유 reason과 분리)
+  scope?: RecurrenceScope; // session_update 반복 적용 범위(this|this_and_following|all)
   targetAvailabilityId?: ID;
   availabilityOwnerType?: AvailabilityOwner;
   availabilityOwnerId?: ID;
