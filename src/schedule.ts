@@ -1,6 +1,6 @@
 // 스케줄 엔진(Lantiv형) 자원: 강의실 · 가용/불가 시간. (상세: docs/scheduling.md)
 import type { ID, ISODate } from './common';
-import type { ClassSession, RecurrenceScope, SessionKind, SessionMode } from './session';
+import type { ClassSession, RecurrenceScope, SessionKind, SessionMode, SessionStatus } from './session';
 
 // 강의실(Room/Location). 일간 뷰 컬럼 · 이중예약/capacity 충돌 기준.
 export type Room = {
@@ -58,6 +58,58 @@ export type ScheduleRow = ClassSession & {
   // 코호트(코스 수강생) — 학생 차원 색/라벨·필터·개인 스케줄용(enrollment status != drop만)
   studentIds: ID[];
   studentNames: string[];
+};
+
+// ── [TBO-29C C2] 반복 시리즈 자산 — 서버가 series ID를 발급하고 규칙·생성자·기간을 DB에 영속화 ──
+// class_sessions.series_id가 이 표를 FK로 참조한다. course/instructor/room/student snapshot은
+// 각 occurrence(class_sessions)가 소유하며 시리즈 표에 복제하지 않는다.
+export type ScheduleSeriesRepeatKind = 'weekly' | 'custom';
+
+export type ScheduleSeries = {
+  id: ID;
+  repeatKind: ScheduleSeriesRepeatKind; // weekly=시작일 요일 1개, custom=선택 요일들
+  weekdays: number[]; // 0(일)~6(토) — 중복 없음
+  startsOn: ISODate; // 첫 occurrence 후보일(KST)
+  endsOn: ISODate; // 마지막 occurrence 후보일(KST) — startsOn <= endsOn
+  startTime: string; // 'HH:mm' (KST)
+  durationMinutes: number; // 10~480 (자정 크로스 포함 — endTime은 occurrence가 파생)
+  timeZone: string; // MVP 'Asia/Seoul' — 규칙이 해석되는 기준 시간대
+  version: number; // series edit CAS(동시 수정 감지 — C3)
+  createdBy?: ID;
+  updatedBy?: ID;
+};
+
+// 반복 생성 bulk command — 단건 create loop/클라이언트 seriesId(Date.now())를 대체한다.
+// 서버가 날짜/요일/기간/시간/cohort/FK를 전체 정규화하고, series+occurrence 전체+audit를 한 transaction으로 저장.
+export type CreateScheduleSeriesCommand = {
+  courseId: ID;
+  instructorId?: ID; // 미지정 시 코스 기본 강사
+  roomId?: ID;
+  studentIds?: ID[]; // 명시 코호트(부분 선택) — 미지정=코스 활성 수강생 파생
+  repeat: {
+    kind: ScheduleSeriesRepeatKind;
+    weekdays: number[]; // 0~6, 중복 없음(weekly는 1개)
+    startsOn: ISODate; // KST
+    endsOn: ISODate; // KST — startsOn <= endsOn
+  };
+  startTime: string; // 'HH:mm' (KST)
+  endTime?: string; // startTime보다 이르면 익일 종료(자정 크로스) — durationMinutes 파생 저장
+  durationMinutes?: number; // endTime 없을 때 사용
+  timeZone?: string; // 기본 'Asia/Seoul'
+  topic?: string;
+  memo?: string;
+  color?: string;
+  status?: SessionStatus;
+  kind?: SessionKind;
+  price?: number;
+  mode?: SessionMode;
+  force?: boolean; // 충돌 무시 강제(기본 false → 전체 충돌 목록과 함께 409)
+};
+
+export type CreateScheduleSeriesResult = {
+  series: ScheduleSeries;
+  rows: ScheduleRow[]; // 생성된 occurrence 전체(enriched)
+  conflicts: Conflict[]; // force 통과 시 감수한 충돌 목록
 };
 
 // 자원 피커(좌측 레일·필터)용 경량 읽기모델. GET /schedule/resources 응답.
