@@ -58,6 +58,7 @@ export type ScheduleRow = ClassSession & {
   // 코호트(코스 수강생) — 학생 차원 색/라벨·필터·개인 스케줄용(enrollment status != drop만)
   studentIds: ID[];
   studentNames: string[];
+  seriesVersion?: number; // [TBO-29C C3] series edit CAS — scope 편집/삭제 시 expectedSeriesVersion으로 회신
 };
 
 // ── [TBO-29C C2] 반복 시리즈 자산 — 서버가 series ID를 발급하고 규칙·생성자·기간을 DB에 영속화 ──

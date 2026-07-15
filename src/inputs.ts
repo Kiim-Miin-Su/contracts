@@ -137,6 +137,7 @@ export type UpdateClassSessionInput = {
   status?: SessionStatus;
   instructorAttendance?: InstructorAttendanceStatus;
   scope?: RecurrenceScope; // 시리즈 편집 적용 범위
+  expectedSeriesVersion?: number; // [TBO-29C C3] series edit CAS — 불일치 시 409 SERIES_VERSION_STALE
   force?: boolean;
   kind?: SessionKind; // [v0.1.14]
   price?: number; // [v0.1.14]
