@@ -70,8 +70,6 @@ export type CreateSubjectInput = {
   name: string;
 };
 
-export type UpdateSubjectInput = Partial<CreateSubjectInput>;
-
 export type CreateCourseInput = {
   name: string;
   subjectId: ID;
@@ -80,8 +78,6 @@ export type CreateCourseInput = {
   hourlyRate: number;
   color?: string; // 캘린더 색상 라벨(개설 시 선택)
 };
-
-export type UpdateCourseInput = Partial<CreateCourseInput>;
 
 export type CreateRoadmapInput = {
   title: string;
