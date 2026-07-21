@@ -271,6 +271,8 @@ export type UpsertSessionReportInput = {
 export type CreateCounselInput = {
   applicantName: string;
   applicantPhone?: string;
+  parentId?: ID;
+  studentId?: ID;
   source: CounselSource;
   /** 폼 작성 주체. 외부 연동/legacy 호출은 생략 시 unknown으로 저장된다. */
   submitterType?: CounselSubmitterType;
@@ -293,6 +295,8 @@ export type UpdateCounselInput = {
   submitterType?: CounselSubmitterType;
   applicantName?: string;
   applicantPhone?: string | null;
+  parentId?: ID | null;
+  studentId?: ID | null;
   assignedStaffId?: ID | null;
   interestSubjectId?: ID | null;
   interestCourseId?: ID | null;
