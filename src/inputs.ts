@@ -13,9 +13,6 @@ import type {
   CounselFormSnapshot,
   CounselResult,
   CounselStatus,
-  DesiredStartTime,
-  LearningAtmosphere,
-  StudentIntention,
 } from './counsel';
 
 // ─────────── 학생/학부모 ───────────
@@ -269,21 +266,11 @@ export type UpsertSessionReportInput = {
 
 // ─────────── 상담 ───────────
 export type CreateCounselInput = {
-  applicantName: string;
-  applicantPhone?: string;
-  parentId?: ID;
-  studentId?: ID;
+  studentId: ID;
   source: CounselSource;
   /** 폼 작성 주체. 외부 연동/legacy 호출은 생략 시 unknown으로 저장된다. */
   submitterType?: CounselSubmitterType;
   assignedStaffId?: ID;
-  interestSubjectId?: ID;
-  interestCourseId?: ID;
-  academyExpectation?: string;
-  desiredStartTime?: DesiredStartTime;
-  learningAtmosphere?: LearningAtmosphere;
-  studentIntention?: StudentIntention;
-  weakness?: string;
   referenceNotes?: string;
   /** 상담 예약 캘린더의 현재 예정일. counsel_forms.next_contact_at 단일 진실원에 저장된다. */
   nextContactAt?: ISODate;
@@ -293,18 +280,8 @@ export type UpdateCounselInput = {
   status?: CounselStatus;
   source?: CounselSource;
   submitterType?: CounselSubmitterType;
-  applicantName?: string;
-  applicantPhone?: string | null;
-  parentId?: ID | null;
-  studentId?: ID | null;
+  studentId?: ID;
   assignedStaffId?: ID | null;
-  interestSubjectId?: ID | null;
-  interestCourseId?: ID | null;
-  academyExpectation?: string | null;
-  desiredStartTime?: DesiredStartTime | null;
-  learningAtmosphere?: LearningAtmosphere | null;
-  studentIntention?: StudentIntention | null;
-  weakness?: string | null;
   referenceNotes?: string | null;
   /** null은 예약일 해제, undefined는 미변경이다. */
   nextContactAt?: ISODate | null;

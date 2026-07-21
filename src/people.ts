@@ -11,11 +11,11 @@ export type Student = {
   englishName?: string;
   gender?: StudentGender;
   birthDate?: ISODate;
-  grade?: number; // 0=Kinder, 1..13=G1..G13. optional은 legacy read 호환이며 신규 aggregate는 필수.
+  grade?: number; // academicHistories의 현재 구간에서 파생. 0=Kinder, 1..13=G1..G13.
   phone?: string;
   status: StudentStatus;
   country?: string; // ISO 3166-1 alpha-2(예: KR·US·VN) — 해외 학생 시차 계산·국가 필터(v0.1.11)
-  schoolName?: string;
+  schoolName?: string; // academicHistories의 현재 구간에서 파생.
   residenceType?: ResidenceType;
   address?: string;
   addressDetail?: string;
