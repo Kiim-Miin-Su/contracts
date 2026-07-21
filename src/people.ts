@@ -11,7 +11,7 @@ export type Student = {
   englishName?: string;
   gender?: StudentGender;
   birthDate?: ISODate;
-  grade?: number; // 0=Kinder, 1..12=G1..G12. optional은 legacy read 호환이며 신규 aggregate는 필수.
+  grade?: number; // 0=Kinder, 1..13=G1..G13. optional은 legacy read 호환이며 신규 aggregate는 필수.
   phone?: string;
   status: StudentStatus;
   country?: string; // ISO 3166-1 alpha-2(예: KR·US·VN) — 해외 학생 시차 계산·국가 필터(v0.1.11)
@@ -61,6 +61,27 @@ export type StudentAggregate = {
   interests: StudentInterest[];
   guardians: StudentGuardian[];
 };
+
+export type StudentFamilyRelationType = 'sibling' | 'other';
+
+export type StudentFamilyRelation = {
+  id: ID;
+  studentIdA: ID;
+  studentIdB: ID;
+  relationType: StudentFamilyRelationType;
+  relationLabel?: string | null;
+} & Audited;
+
+export type StudentAcademicHistory = {
+  id: ID;
+  studentId: ID;
+  grade: number;
+  schoolName: string;
+  startedOn: ISODate;
+  endedOn?: ISODate | null;
+  changedBy: ID;
+  changedAt: string;
+} & Audited;
 
 // 강사 (staff_role=instructor)
 export type Instructor = {

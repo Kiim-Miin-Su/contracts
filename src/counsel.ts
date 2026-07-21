@@ -26,6 +26,7 @@ export type CounselForm = {
   learningAtmosphere?: LearningAtmosphere | null;
   studentIntention?: StudentIntention | null;
   weakness?: string | null;
+  referenceNotes?: string | null;
   nextContactAt?: ISODate | null;
   createdAt: ISODate;
 };

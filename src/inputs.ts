@@ -53,7 +53,7 @@ export type CreateStudentInput = {
   gender?: StudentGender;
   birthDate: ISODate;
   phone?: string;
-  grade: number; // 0=Kinder, 1..12=G1..G12
+  grade: number; // 0=Kinder, 1..13=G1..G13
   schoolName?: string;
   residenceType?: ResidenceType;
   address?: string;
@@ -74,6 +74,23 @@ export type StudentInterestInput = {
   customLabel?: string;
   priority: number;
 };
+
+export type CreateStudentFamilyRelationInput = {
+  studentIdA: ID;
+  studentIdB: ID;
+  relationType: 'sibling' | 'other';
+  relationLabel?: string;
+};
+
+export type CreateStudentAcademicHistoryInput = {
+  studentId: ID;
+  grade: number;
+  schoolName: string;
+  startedOn: ISODate;
+  endedOn?: ISODate | null;
+};
+
+export type UpdateStudentAcademicHistoryInput = Partial<Omit<CreateStudentAcademicHistoryInput, 'studentId'>>;
 
 // 학생 등록 시 함께 연결되는 학부모(임베드용 — studentId는 신규 학생으로 자동 결정)
 export type ParentLinkInput = {
@@ -260,6 +277,7 @@ export type CreateCounselInput = {
   learningAtmosphere?: LearningAtmosphere;
   studentIntention?: StudentIntention;
   weakness?: string;
+  referenceNotes?: string;
   /** 상담 예약 캘린더의 현재 예정일. counsel_forms.next_contact_at 단일 진실원에 저장된다. */
   nextContactAt?: ISODate;
 };
@@ -278,6 +296,7 @@ export type UpdateCounselInput = {
   learningAtmosphere?: LearningAtmosphere | null;
   studentIntention?: StudentIntention | null;
   weakness?: string | null;
+  referenceNotes?: string | null;
   /** null은 예약일 해제, undefined는 미변경이다. */
   nextContactAt?: ISODate | null;
 };
