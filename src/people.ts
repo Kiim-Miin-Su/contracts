@@ -51,6 +51,17 @@ export type ParentStudent = {
   isPrimary: boolean;
 };
 
+export type StudentGuardian = {
+  parent: Parent;
+  relation: ParentStudent;
+};
+
+export type StudentAggregate = {
+  student: Student;
+  interests: StudentInterest[];
+  guardians: StudentGuardian[];
+};
+
 // 강사 (staff_role=instructor)
 export type Instructor = {
   id: ID;

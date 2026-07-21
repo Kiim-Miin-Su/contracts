@@ -57,6 +57,22 @@ export type ParentLinkInput = {
   isPrimary?: boolean;
 };
 
+/** 학생 원부+희망 수업+보호자 관계를 한 transaction으로 생성하는 command 계약. */
+export type CreateStudentAggregateInput = {
+  student: CreateStudentInput;
+  interests: StudentInterestInput[];
+  guardians?: ParentLinkInput[];
+  /** v0.2.5 이하 클라이언트 전환용. guardians와 동시 사용 금지. */
+  guardian?: ParentLinkInput;
+  courseId?: ID;
+};
+
+/** 학생 원부와 희망 수업 전체를 원자 교체한다. 보호자 관계는 독립 relation CRUD를 사용한다. */
+export type UpdateStudentAggregateInput = {
+  student?: UpdateStudentInput;
+  interests?: StudentInterestInput[];
+};
+
 // 학부모 단독 등록(POST /parents) — 연결할 학생 지정 필요
 export type CreateParentInput = ParentLinkInput & { studentId: ID };
 
