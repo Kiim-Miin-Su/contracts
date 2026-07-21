@@ -10,6 +10,7 @@ import type { AvailabilityOwner, AvailabilityKind, ScheduleRequestKind } from '.
 import type {
   CounselSource,
   CounselSubmitterType,
+  CounselFormSnapshot,
   CounselResult,
   CounselStatus,
   DesiredStartTime,
@@ -204,6 +205,7 @@ export type CreateCounselInput = {
 
 export type UpdateCounselInput = {
   status?: CounselStatus;
+  source?: CounselSource;
   submitterType?: CounselSubmitterType;
   applicantName?: string;
   applicantPhone?: string | null;
@@ -226,6 +228,8 @@ export type CreateCounselRoundInput = {
   result?: CounselResult;
   nextAction?: string;
   nextContactAt?: ISODate;
+  /** 생략한 legacy 호출은 서버가 현재 상담 폼에서 생성한다. 신규 UI는 전체 페이지를 전송한다. */
+  formSnapshot?: CounselFormSnapshot;
 };
 
 // ─────────── 결제/지출/강사페이 ───────────

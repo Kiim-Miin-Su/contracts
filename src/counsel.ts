@@ -30,17 +30,21 @@ export type CounselForm = {
   createdAt: ISODate;
 };
 
+/** 각 상담 차수가 생성된 시점의 전체 상담 페이지. 이후 최초 폼 수정과 독립적으로 보존한다. */
+export type CounselFormSnapshot = Omit<CounselForm, 'id' | 'createdAt'>;
+
 export type CounselRound = {
   id: ID;
   counselFormId: ID;
   roundNo: number;
-  counselorId?: ID;
-  scheduledAt?: ISODate;
-  completedAt?: ISODate;
+  counselorId?: ID | null;
+  scheduledAt?: ISODate | null;
+  completedAt?: ISODate | null;
   isCompleted: boolean;
-  summary?: string;
-  detail?: string;
-  result?: CounselResult;
-  nextAction?: string;
-  nextContactAt?: ISODate;
+  summary?: string | null;
+  detail?: string | null;
+  result?: CounselResult | null;
+  nextAction?: string | null;
+  nextContactAt?: ISODate | null;
+  formSnapshot: CounselFormSnapshot;
 };
