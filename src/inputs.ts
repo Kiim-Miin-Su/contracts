@@ -9,6 +9,7 @@ import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, Instruct
 import type { AvailabilityOwner, AvailabilityKind, ScheduleRequestKind } from './schedule';
 import type {
   CounselSource,
+  CounselSubmitterType,
   CounselResult,
   CounselStatus,
   DesiredStartTime,
@@ -187,6 +188,8 @@ export type CreateCounselInput = {
   applicantName: string;
   applicantPhone?: string;
   source: CounselSource;
+  /** 폼 작성 주체. 외부 연동/legacy 호출은 생략 시 unknown으로 저장된다. */
+  submitterType?: CounselSubmitterType;
   assignedStaffId?: ID;
   interestSubjectId?: ID;
   interestCourseId?: ID;
@@ -195,15 +198,25 @@ export type CreateCounselInput = {
   learningAtmosphere?: LearningAtmosphere;
   studentIntention?: StudentIntention;
   weakness?: string;
+  /** 상담 예약 캘린더의 현재 예정일. counsel_forms.next_contact_at 단일 진실원에 저장된다. */
+  nextContactAt?: ISODate;
 };
 
 export type UpdateCounselInput = {
   status?: CounselStatus;
-  assignedStaffId?: ID;
-  interestSubjectId?: ID;
-  interestCourseId?: ID;
-  academyExpectation?: string;
-  weakness?: string;
+  submitterType?: CounselSubmitterType;
+  applicantName?: string;
+  applicantPhone?: string | null;
+  assignedStaffId?: ID | null;
+  interestSubjectId?: ID | null;
+  interestCourseId?: ID | null;
+  academyExpectation?: string | null;
+  desiredStartTime?: DesiredStartTime | null;
+  learningAtmosphere?: LearningAtmosphere | null;
+  studentIntention?: StudentIntention | null;
+  weakness?: string | null;
+  /** null은 예약일 해제, undefined는 미변경이다. */
+  nextContactAt?: ISODate | null;
 };
 
 export type CreateCounselRoundInput = {
