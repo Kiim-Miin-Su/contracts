@@ -86,6 +86,42 @@ export type PayoutMeasure = {
   lines: PayoutLine[];
 };
 
+/**
+ * 수업 1건이 정산 가능 상태가 되기 전에 남은 조치.
+ * 보고서 계열은 (sessionId, studentId)마다 정확히 한 건을 반환한다.
+ */
+export type PayReadinessIssueType =
+  | 'session_execution_missing'
+  | 'session_roster_missing'
+  | 'report_missing'
+  | 'report_draft'
+  | 'report_pending_approval'
+  | 'report_rejected'
+  | 'rate_missing';
+
+export type PayReadinessIssue = {
+  id: string;
+  type: PayReadinessIssueType;
+  sessionId: ID;
+  instructorId: ID;
+  studentId?: ID;
+  reportId?: ID;
+  sessionDate: ISODate;
+  startTime?: string;
+  topic?: string;
+  rejectedReason?: string;
+};
+
+/** 백엔드가 판정한 시수·페이 준비 상태. 프론트는 이 결과를 재계산하지 않는다. */
+export type PayReadiness = {
+  periodStart: ISODate;
+  periodEnd: ISODate;
+  instructorId?: ID;
+  eligibleSessionIds: ID[];
+  issues: PayReadinessIssue[];
+  issueCount: number;
+};
+
 export type InstructorPayout = {
   id: ID;
   instructorId: ID;
