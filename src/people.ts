@@ -60,6 +60,10 @@ export type StudentAggregate = {
   student: Student;
   interests: StudentInterest[];
   guardians: StudentGuardian[];
+  /** manager+ 응답에만 포함. 강사 core 학생 상세에서는 서버가 제외한다. */
+  familyRelations?: StudentFamilyRelation[];
+  /** manager+ 응답에만 포함. 강사 core 학생 상세에서는 서버가 제외한다. */
+  academicHistories?: StudentAcademicHistory[];
 };
 
 export type StudentFamilyRelationType = 'sibling' | 'other';

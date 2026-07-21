@@ -1,4 +1,5 @@
 import type { ID, ISODate } from './common';
+import type { StudentAggregate } from './people';
 
 export type CounselStatus = 'requested' | 'pending' | 'registered' | 'dropped';
 export type CounselSource = 'internal_form' | 'naver_form' | 'google_form' | 'manual' | 'etc';
@@ -48,4 +49,10 @@ export type CounselRound = {
   nextAction?: string | null;
   nextContactAt?: ISODate | null;
   formSnapshot: CounselFormSnapshot;
+};
+
+export type CounselAggregate = {
+  form: CounselForm;
+  rounds: CounselRound[];
+  student?: StudentAggregate | null;
 };

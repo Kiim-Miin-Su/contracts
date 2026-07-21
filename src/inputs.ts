@@ -76,11 +76,16 @@ export type StudentInterestInput = {
 };
 
 export type CreateStudentFamilyRelationInput = {
-  studentIdA: ID;
-  studentIdB: ID;
+  /** URL의 기준 학생과 연결할 상대 학생. DB에는 canonical a<b pair로 저장된다. */
+  relatedStudentId: ID;
   relationType: 'sibling' | 'other';
   relationLabel?: string;
 };
+
+export type UpdateStudentFamilyRelationInput = Partial<Pick<
+  CreateStudentFamilyRelationInput,
+  'relationType' | 'relationLabel'
+>>;
 
 export type CreateStudentAcademicHistoryInput = {
   studentId: ID;
@@ -299,6 +304,19 @@ export type UpdateCounselInput = {
   referenceNotes?: string | null;
   /** null은 예약일 해제, undefined는 미변경이다. */
   nextContactAt?: ISODate | null;
+};
+
+export type UpdateCounselRoundInput = {
+  counselorId?: ID | null;
+  scheduledAt?: ISODate | null;
+  completedAt?: ISODate | null;
+  isCompleted?: boolean;
+  summary?: string | null;
+  detail?: string | null;
+  result?: CounselResult | null;
+  nextAction?: string | null;
+  nextContactAt?: ISODate | null;
+  formSnapshot?: CounselFormSnapshot;
 };
 
 export type CreateCounselRoundInput = {
