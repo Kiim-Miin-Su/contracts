@@ -19,6 +19,34 @@ import type {
 } from './counsel';
 
 // ─────────── 학생/학부모 ───────────
+export type CreateInstructorInput = {
+  webId: string;
+  name: string;
+  password: string;
+  email?: string;
+  phone?: string;
+  university?: string;
+  major?: string;
+  birthYear?: number;
+  countryCode?: string;
+  timeZone?: string;
+  defaultHourlyRate?: number;
+  canTeachKinder?: boolean;
+};
+
+export type UpdateInstructorInput = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  university?: string | null;
+  major?: string | null;
+  birthYear?: number | null;
+  countryCode?: string | null;
+  timeZone?: string | null;
+  defaultHourlyRate?: number;
+  canTeachKinder?: boolean;
+};
+
 export type CreateStudentInput = {
   name: string;
   englishName?: string;

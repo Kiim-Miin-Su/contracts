@@ -73,3 +73,14 @@ export type Instructor = {
   defaultHourlyRate: number;
   canTeachKinder: boolean;
 };
+
+export type InstructorAggregate = Instructor & {
+  webId: string;
+  email?: string | null;
+  phone?: string | null;
+  status: 'active' | 'pending' | 'rejected';
+  countryCode?: string | null;
+  timeZone?: string | null;
+  approvedBy: ID;
+  approvedAt: string;
+};
