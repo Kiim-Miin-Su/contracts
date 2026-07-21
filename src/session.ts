@@ -41,6 +41,7 @@ export type ClassSession = {
   price?: number;
   // [v0.1.16] 수업방식(미지정=in_person 하위호환) — 대면/비대면 필터
   mode?: SessionMode;
+  isPublic?: boolean; // 공통 일정 여부. true는 조회 공개만 확장한다.
 };
 
 export type AttendanceStatus = 'present' | 'late' | 'absent' | 'excused';

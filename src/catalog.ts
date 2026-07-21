@@ -12,7 +12,9 @@ export type Course = {
   subjectId: ID;
   instructorId: ID;
   price: number; // 정가(원)
-  hourlyRate: number; // 강사 시급(원/시간) — 페이 산정 기준
+  hourlyRate: number; // 유효 시급 = hourlyRateOverride ?? 강사 defaultHourlyRate
+  hourlyRateOverride?: number | null; // 수업별 관리자 예외값. null이면 강사 기본 페이 사용
+  isKinder: boolean;
   color?: string; // 캘린더 색상 라벨(개설 시 선택) → 세션 색 기본값
 };
 

@@ -23,9 +23,9 @@ export type CreateStudentInput = {
   name: string;
   englishName?: string;
   gender?: StudentGender;
-  birthDate?: ISODate;
+  birthDate: ISODate;
   phone?: string;
-  grade?: number;
+  grade: number; // 0=Kinder, 1..12=G1..G12
   schoolName?: string;
   residenceType?: ResidenceType;
   address?: string;
@@ -105,7 +105,10 @@ export type CreateCourseInput = {
   subjectId: ID;
   instructorId: ID;
   price: number;
-  hourlyRate: number;
+  /** @deprecated v0.2.7 write는 hourlyRateOverride를 사용. legacy client 호환용. */
+  hourlyRate?: number;
+  hourlyRateOverride?: number | null;
+  isKinder?: boolean;
   color?: string; // 캘린더 색상 라벨(개설 시 선택)
 };
 
@@ -137,6 +140,7 @@ export type CreateClassSessionInput = {
   kind?: SessionKind; // [v0.1.14] 종류(기본 class)
   price?: number; // [v0.1.14] 세션 단건 가격(상담 등 — 코스 정가와 별개)
   mode?: SessionMode; // [v0.1.16] 수업방식(기본 in_person)
+  isPublic?: boolean; // 공통 일정: 승인된 전 직원에게 조회 공개(수정 권한은 확장하지 않음)
 };
 
 // 기간 + 요일 반복 생성(시리즈)
@@ -172,6 +176,7 @@ export type UpdateClassSessionInput = {
   kind?: SessionKind; // [v0.1.14]
   price?: number; // [v0.1.14]
   mode?: SessionMode; // [v0.1.16] 수업방식
+  isPublic?: boolean;
 };
 
 // [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.

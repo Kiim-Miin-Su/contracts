@@ -104,6 +104,7 @@ export type CreateScheduleSeriesCommand = {
   kind?: SessionKind;
   price?: number;
   mode?: SessionMode;
+  isPublic?: boolean;
   force?: boolean; // 충돌 무시 강제(기본 false → 전체 충돌 목록과 함께 409)
 };
 

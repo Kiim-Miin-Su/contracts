@@ -67,4 +67,9 @@ export type Instructor = {
   id: ID;
   name: string;
   subjectName?: string;
+  university?: string | null;
+  major?: string | null;
+  birthYear?: number | null;
+  defaultHourlyRate: number;
+  canTeachKinder: boolean;
 };
