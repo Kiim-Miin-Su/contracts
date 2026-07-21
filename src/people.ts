@@ -11,7 +11,7 @@ export type Student = {
   englishName?: string;
   gender?: StudentGender;
   birthDate?: ISODate;
-  grade?: number; // 1~12
+  grade?: number; // 0=Kinder, 1..12=G1..G12. optional은 legacy read 호환이며 신규 aggregate는 필수.
   phone?: string;
   status: StudentStatus;
   country?: string; // ISO 3166-1 alpha-2(예: KR·US·VN) — 해외 학생 시차 계산·국가 필터(v0.1.11)
