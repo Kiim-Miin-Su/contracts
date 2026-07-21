@@ -2,7 +2,7 @@
 // 프론트 store/mock 함수의 매개변수도 동일 타입을 사용한다(단일 소스).
 // 복합 UI 폼(여러 엔드포인트로 분해)은 단일 DTO로 합치지 않고 DTO 조합으로 모델링한다.
 import type { ID, ISODate } from './common';
-import type { StudentStatus, ResidenceType } from './people';
+import type { StudentGender, StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
 import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, InstructorAttendanceStatus } from './session';
@@ -22,10 +22,16 @@ import type {
 export type CreateStudentInput = {
   name: string;
   englishName?: string;
+  gender?: StudentGender;
+  birthDate?: ISODate;
   phone?: string;
   grade?: number;
   schoolName?: string;
   residenceType?: ResidenceType;
+  address?: string;
+  addressDetail?: string;
+  kakaoId?: string;
+  counselTopic?: string;
   status?: StudentStatus;
   memo?: string;
   webId?: string;
@@ -34,6 +40,12 @@ export type CreateStudentInput = {
 };
 
 export type UpdateStudentInput = Partial<CreateStudentInput>;
+
+export type StudentInterestInput = {
+  courseId?: ID;
+  customLabel?: string;
+  priority: number;
+};
 
 // 학생 등록 시 함께 연결되는 학부모(임베드용 — studentId는 신규 학생으로 자동 결정)
 export type ParentLinkInput = {
