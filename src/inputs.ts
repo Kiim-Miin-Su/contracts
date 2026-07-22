@@ -217,7 +217,7 @@ export type OpenClassCatalogInput = {
 
 export type OpenClassInput = OpenClassCatalogInput & Omit<
   CreateClassSessionInput,
-  'courseId' | 'instructorId' | 'studentIds' | 'seriesId'
+  'courseId' | 'instructorId' | 'studentIds' | 'seriesId' | 'makeupForSessionId'
 >;
 
 export type OpenClassSeriesInput = OpenClassCatalogInput & {
