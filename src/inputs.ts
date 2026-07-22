@@ -221,6 +221,7 @@ export type OpenClassInput = OpenClassCatalogInput & Omit<
 >;
 
 export type OpenClassSeriesInput = OpenClassCatalogInput & {
+  roomId?: ID;
   repeat: {
     kind: ScheduleSeriesRepeatKind;
     weekdays: number[];
