@@ -209,6 +209,7 @@ export type ScheduleRequest = {
   kind?: SessionKind;
   mode?: SessionMode; // [C2D 2026-07-08] 수업방식 보존 — 요청→승인 세션까지 전달(미지정=in_person)
   topic?: string;
+  memo?: string; // 강사 입력 메모 — 요청 DB에 저장되고 승인 시 class_sessions.memo로 전달
   studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
   requestReason?: string; // 요청자가 제출한 사유(반려 사유 reason과 분리)
   scope?: RecurrenceScope; // 반복 수업 변경 적용 범위(session_update)

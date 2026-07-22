@@ -239,6 +239,7 @@ export type CreateScheduleRequestInput = {
   durationMinutes?: number;
   studentIds?: ID[];
   topic?: string;
+  memo?: string; // 요청 단계 보존 후 승인 세션 memo로 전달
   kind?: SessionKind;
   mode?: SessionMode; // [C2D] 수업방식 보존(session_create)
   requestReason?: string; // 요청자가 제출한 사유(반려 사유 reason과 분리)
