@@ -6,7 +6,17 @@ import type { StudentGender, StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
 import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, InstructorAttendanceStatus } from './session';
-import type { AvailabilityOwner, AvailabilityKind, ScheduleRequestKind } from './schedule';
+import type {
+  AvailabilityOwner,
+  AvailabilityKind,
+  Conflict,
+  ScheduleRequestKind,
+  ScheduleRow,
+  ScheduleSeries,
+  ScheduleSeriesRepeatKind,
+} from './schedule';
+import type { Course, Subject } from './catalog';
+import type { Enrollment } from './enrollment';
 import type {
   CounselSource,
   CounselSubmitterType,
@@ -188,6 +198,64 @@ export type CreateClassSessionInput = {
   price?: number; // [v0.1.14] 세션 단건 가격(상담 등 — 코스 정가와 별개)
   mode?: SessionMode; // [v0.1.16] 수업방식(기본 in_person)
   isPublic?: boolean; // 공통 일정: 승인된 전 직원에게 조회 공개(수정 권한은 확장하지 않음)
+};
+
+/**
+ * 관리자 수업 개설 화면의 제품 계약.
+ * 사용자는 courseId를 선행 생성하지 않고 과목명을 입력한다. 서버가 subject → instructor별 course →
+ * 선택 학생 enrollment → session을 한 transaction으로 resolve/create한다.
+ */
+export type OpenClassCatalogInput = {
+  subjectName: string;
+  instructorId: ID;
+  studentIds?: ID[];
+  hourlyRateOverride?: number | null;
+  coursePrice?: number;
+  isKinder?: boolean;
+  color?: string;
+};
+
+export type OpenClassInput = OpenClassCatalogInput & Omit<
+  CreateClassSessionInput,
+  'courseId' | 'instructorId' | 'studentIds' | 'seriesId'
+>;
+
+export type OpenClassSeriesInput = OpenClassCatalogInput & {
+  repeat: {
+    kind: ScheduleSeriesRepeatKind;
+    weekdays: number[];
+    startsOn: ISODate;
+    endsOn: ISODate;
+  };
+  startTime: string;
+  endTime?: string;
+  durationMinutes?: number;
+  timeZone?: string;
+  topic?: string;
+  memo?: string;
+  status?: SessionStatus;
+  kind?: SessionKind;
+  price?: number;
+  mode?: SessionMode;
+  isPublic?: boolean;
+  force?: boolean;
+};
+
+export type OpenClassResult = {
+  subject: Subject;
+  course: Course;
+  enrollments: Enrollment[];
+  row: ScheduleRow;
+  conflicts: Conflict[];
+};
+
+export type OpenClassSeriesResult = {
+  subject: Subject;
+  course: Course;
+  enrollments: Enrollment[];
+  series: ScheduleSeries;
+  rows: ScheduleRow[];
+  conflicts: Conflict[];
 };
 
 // 기간 + 요일 반복 생성(시리즈)

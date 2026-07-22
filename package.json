@@ -1,6 +1,6 @@
 {
   "name": "@kms545487/contracts",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "description": "TACO 공유 도메인 계약(타입·enum·DTO). 프론트/백 단일 소스.",
   "license": "UNLICENSED",
   "repository": {
