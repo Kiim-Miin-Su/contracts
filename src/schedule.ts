@@ -1,5 +1,6 @@
 // 스케줄 엔진(Lantiv형) 자원: 강의실 · 가용/불가 시간. (상세: docs/scheduling.md)
 import type { ID, ISODate } from './common';
+import type { AccountRole } from './account';
 import type { ClassSession, RecurrenceScope, SessionKind, SessionMode, SessionStatus } from './session';
 
 // 강의실(Room/Location). 일간 뷰 컬럼 · 이중예약/capacity 충돌 기준.
@@ -123,6 +124,7 @@ export type ScheduleResource = {
   sub?: string; // 보조 라벨(과목·학년·정원 등)
   countryCode?: string; // owner 국가/시차 표시용. 예: KR, US, GB, US-W.
   timeZone?: string; // IANA timezone. countryCode보다 세밀한 owner timezone이 있을 때 사용.
+  scheduleOwnerRole?: AccountRole; // 일정 담당자 옵션에서 강사/대표를 구분(현재 서버 후보는 두 역할만 반환)
 };
 // 배정(추천→세션 생성) 폼용 코스 옵션 — 스케줄 FK 유니버스와 정렬.
 export type ScheduleCourseOption = {
