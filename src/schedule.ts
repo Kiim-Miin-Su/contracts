@@ -130,11 +130,13 @@ export type ScheduleResource = {
 export type ScheduleCourseOption = {
   id: ID;
   name: string;
+  subjectId: ID; // 캘린더 과목 split/filter가 별도 /subjects 전량 조회 없이 쓰는 FK
   instructorId: ID;
   instructorName?: string;
   subjectName: string;
   color?: string;
   durationMinutes: number; // 코스 진행시간(세션에서 파생, 없으면 기본값)
+  studentIds: ID[]; // 이 코스의 활성 수강생 — 생성 모달 roster의 DB 권위 집합
 };
 export type ScheduleResources = {
   instructors: ScheduleResource[];
