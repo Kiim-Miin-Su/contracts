@@ -1,4 +1,4 @@
-import type { ID, ISODate } from './common';
+import type { ID, ISODate, ISOInstant } from './common';
 import type { StudentAggregate } from './people';
 
 export type CounselStatus = 'requested' | 'pending' | 'registered' | 'dropped';
@@ -16,7 +16,7 @@ export type CounselForm = {
   source: CounselSource;
   submitterType: CounselSubmitterType;
   referenceNotes?: string | null;
-  nextContactAt?: ISODate | null;
+  nextContactAt?: ISOInstant | null;
   createdAt: ISODate;
 };
 
@@ -35,7 +35,7 @@ export type CounselRound = {
   detail?: string | null;
   result?: CounselResult | null;
   nextAction?: string | null;
-  nextContactAt?: ISODate | null;
+  nextContactAt?: ISOInstant | null;
   formSnapshot: CounselFormSnapshot;
 };
 

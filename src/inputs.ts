@@ -1,7 +1,7 @@
 // 요청(생성/수정) DTO의 공유 형상. 백엔드 DTO class가 implements 하여 일치 보장.
 // 프론트 store/mock 함수의 매개변수도 동일 타입을 사용한다(단일 소스).
 // 복합 UI 폼(여러 엔드포인트로 분해)은 단일 DTO로 합치지 않고 DTO 조합으로 모델링한다.
-import type { ID, ISODate } from './common';
+import type { ID, ISODate, ISOInstant } from './common';
 import type { StudentGender, StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
@@ -342,8 +342,8 @@ export type CreateCounselInput = {
   submitterType?: CounselSubmitterType;
   assignedStaffId?: ID;
   referenceNotes?: string;
-  /** 상담 예약 캘린더의 현재 예정일. counsel_forms.next_contact_at 단일 진실원에 저장된다. */
-  nextContactAt?: ISODate;
+  /** 상담 예약 캘린더의 현재 예정 시각. 타임존을 포함한 instant로 저장된다. */
+  nextContactAt?: ISOInstant;
 };
 
 export type UpdateCounselInput = {
@@ -353,8 +353,8 @@ export type UpdateCounselInput = {
   studentId?: ID;
   assignedStaffId?: ID | null;
   referenceNotes?: string | null;
-  /** null은 예약일 해제, undefined는 미변경이다. */
-  nextContactAt?: ISODate | null;
+  /** null은 예정 시각 해제, undefined는 미변경이다. */
+  nextContactAt?: ISOInstant | null;
 };
 
 export type UpdateCounselRoundInput = {
@@ -366,7 +366,7 @@ export type UpdateCounselRoundInput = {
   detail?: string | null;
   result?: CounselResult | null;
   nextAction?: string | null;
-  nextContactAt?: ISODate | null;
+  nextContactAt?: ISOInstant | null;
   formSnapshot?: CounselFormSnapshot;
 };
 
@@ -376,7 +376,7 @@ export type CreateCounselRoundInput = {
   detail?: string;
   result?: CounselResult;
   nextAction?: string;
-  nextContactAt?: ISODate;
+  nextContactAt?: ISOInstant;
   /** 생략한 legacy 호출은 서버가 현재 상담 폼에서 생성한다. 신규 UI는 전체 페이지를 전송한다. */
   formSnapshot?: CounselFormSnapshot;
 };
