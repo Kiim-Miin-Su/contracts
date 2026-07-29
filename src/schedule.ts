@@ -54,6 +54,58 @@ export type Conflict = {
   detail?: string;
 };
 
+export type SessionAccountingProjection = {
+  teachingMinutes: number;
+  payoutEligibleMinutes: number;
+  computedAmount: number;
+};
+
+export type SessionAccountingImpact = {
+  changed: boolean;
+  payoutId?: ID | null;
+  before: SessionAccountingProjection;
+  after: SessionAccountingProjection;
+  delta: SessionAccountingProjection;
+};
+
+export type SessionAccountingImpactCode =
+  | 'ACCOUNTING_IMPACT_ACK_REQUIRED'
+  | 'PAYOUT_REVERSAL_REQUIRED';
+
+export type SessionAccountingImpactConflict = {
+  code: SessionAccountingImpactCode;
+  message: string;
+  impact: SessionAccountingImpact;
+  impactHash?: string;
+  sessionIds?: ID[];
+};
+
+export type AvailabilityImpactReason =
+  | 'available_removed'
+  | 'unavailable_overlap'
+  | 'online_only_overlap';
+
+export type AvailabilityImpact = {
+  sessionId: ID;
+  sessionDate: ISODate;
+  startTime?: string;
+  endTime?: string;
+  instructorId?: ID;
+  instructorName?: string;
+  courseId?: ID;
+  topic?: string;
+  reason: AvailabilityImpactReason;
+};
+
+export type AvailabilityImpactResponse = {
+  impactedSessions: AvailabilityImpact[];
+};
+
+export type AvailabilityImpactConflict = AvailabilityImpactResponse & {
+  message: string;
+  approvalRequired: true;
+};
+
 // 주간 표/캘린더용 enriched 읽기모델(세션 + 라벨·색). 백엔드 GET /schedule 응답.
 export type ScheduleRow = ClassSession & {
   weekday: number; // 0(일)~6(토)

@@ -98,6 +98,126 @@ export type PayoutMeasure = {
   lines: PayoutLine[];
 };
 
+export type PayoutWorksheetPricingKind = 'auto' | 'manual' | 'excluded';
+export type PayoutWorksheetManualReason =
+  | 'late'
+  | 'attendance_missing'
+  | 'report_incomplete'
+  | 'roster_missing'
+  | 'rate_missing';
+export type PayoutWorksheetExcludedReason =
+  | 'not_held'
+  | 'instructor_absent'
+  | 'payout_linked';
+
+export type PayoutWorksheetPricing = {
+  kind: PayoutWorksheetPricingKind;
+  manualReasons: PayoutWorksheetManualReason[];
+  excludedReason?: PayoutWorksheetExcludedReason;
+  autoAmount: number | null;
+  overrideAmount: number | null;
+  effectiveAmount: number | null;
+};
+
+export type PayoutWorksheetParticipant = {
+  studentId: ID;
+  name: string;
+  attendance: string | null;
+  reportId: ID | null;
+  reportApproval: string | null;
+};
+
+export type PayoutWorksheetRow = {
+  sessionId: ID;
+  sessionDate: ISODate;
+  startTime: string | null;
+  durationMinutes: number;
+  courseId: ID;
+  courseName: string;
+  subjectId: ID | null;
+  subjectName: string;
+  hourlyRate: number | null;
+  status: string;
+  instructorAttendance: string | null;
+  payoutId: ID | null;
+  participants: PayoutWorksheetParticipant[];
+  pricing: PayoutWorksheetPricing;
+};
+
+export type PayoutWorksheetTotals = {
+  sessionCount: number;
+  includedCount: number;
+  totalMinutes: number;
+  autoAmount: number;
+  manualAmount: number;
+  totalAmount: number;
+  unpricedCount: number;
+  excludedCount: number;
+};
+
+export type PayoutWorksheet = {
+  instructorId: ID;
+  periodStart: ISODate;
+  periodEnd: ISODate;
+  rows: PayoutWorksheetRow[];
+  totals: PayoutWorksheetTotals;
+};
+
+export type GenerateBulkPayoutInput = {
+  periodStart: ISODate;
+  periodEnd: ISODate;
+  instructorIds?: ID[];
+};
+
+export type BulkGeneratePayoutResult = {
+  generated: Array<{
+    instructorId: ID;
+    payoutId: ID;
+    amount: number;
+    sessionCount: number;
+  }>;
+  skipped: Array<{ instructorId: ID; reason: string }>;
+  failed: Array<{ instructorId: ID; error: string }>;
+};
+
+export type RevenueKeyAmount = { key: string; amount: number; count: number };
+export type RevenueReport = {
+  from: ISODate | null;
+  to: ISODate | null;
+  realizedTotal: number;
+  unpaidTotal: number;
+  unpaidCount: number;
+  byMonth: RevenueKeyAmount[];
+  bySubject: RevenueKeyAmount[];
+  byCourse: RevenueKeyAmount[];
+  byStudent: RevenueKeyAmount[];
+};
+export type FinanceSummary = {
+  from: ISODate | null;
+  to: ISODate | null;
+  revenue: number;
+  expenses: number;
+  payouts: number;
+  net: number;
+};
+export type RevenueAgingBucket = { bucket: string; amount: number; count: number };
+export type EnrollmentTrendRow = { month: string; started: number; ended: number; net: number };
+export type CourseProfitRow = {
+  courseId: ID;
+  courseName: string;
+  revenue: number;
+  cost: number;
+  profit: number;
+};
+export type CeoDashboard = {
+  from: ISODate | null;
+  to: ISODate | null;
+  finance: FinanceSummary;
+  receivables: RevenueAgingBucket[];
+  enrollmentTrend: EnrollmentTrendRow[];
+  courseProfit: CourseProfitRow[];
+};
+
 /**
  * 수업 1건이 정산 가능 상태가 되기 전에 남은 조치.
  * 보고서 계열은 (sessionId, studentId)마다 정확히 한 건을 반환한다.
