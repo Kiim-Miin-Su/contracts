@@ -64,8 +64,9 @@ export type SessionReport = {
   sessionId: ID;
   studentId: ID;
   instructorId: ID;
-  subjectId?: ID; // 과목 스냅샷(작성 시점) — TBO-05
+  subjectId?: ID; // 작성 시점 과목 스냅샷(감사용). 화면 표시는 SessionReportView.context 조인값이 권위다.
   content: string;
+  progressPage?: string;
   homework?: string;
   status: ReportStatus;
   // 승인 워크플로우(TBO-05) — status와 별개로 정산 적격 판정에 사용.
@@ -74,6 +75,42 @@ export type SessionReport = {
   approvedAt?: ISODate;
   approvedBy?: ID;
   rejectedReason?: string;
+};
+
+/**
+ * 보고서 화면의 서버 조인 읽기 모델.
+ * 학년/학생/수업일/과목/시간은 리포트에 복제하지 않고 원부와 세션/코스/과목에서 투영한다.
+ */
+export type SessionReportContext = {
+  student: {
+    id: ID;
+    name: string;
+    grade?: number;
+    schoolName?: string;
+  };
+  session: {
+    id: ID;
+    sessionDate: ISODate;
+    startTime?: string;
+    endTime?: string;
+    durationMinutes: number;
+  };
+  course: {
+    id: ID;
+    name: string;
+  };
+  subject?: {
+    id: ID;
+    name: string;
+  };
+  instructor: {
+    id: ID;
+    name: string;
+  };
+};
+
+export type SessionReportView = SessionReport & {
+  context: SessionReportContext;
 };
 
 // ── 리포트 템플릿(v0.1.12) ─────────────────────────────────────

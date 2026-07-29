@@ -327,6 +327,7 @@ export type UpsertSessionReportInput = {
   sessionId: ID;
   studentId: ID;
   content?: string;
+  progressPage?: string;
   homework?: string;
   // [v0.1.14 — A1 drift 보정] BE CreateReportDto·FE api.reports.create가 이미 쓰던 필드를 계약에 편입.
   instructorId?: ID; // 미지정 시 세션 강사로 채움
