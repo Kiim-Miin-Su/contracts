@@ -61,6 +61,18 @@ export type Expense = {
   rejectedReason?: string; // 반려 사유(v0.1.12 — 자산화: 클라 임시 보관 → 서버 저장)
 } & Audited;
 
+/** 대표가 관리하는 강사 기간 계약. 시수·시급 비교 기준이며 지급 snapshot과는 분리한다. */
+export type InstructorContract = {
+  id: ID;
+  instructorId: ID;
+  monthlyHours: number;
+  hourlyRate: number;
+  periodStart: ISODate;
+  periodEnd?: ISODate | null;
+  active: boolean;
+  memo?: string | null;
+} & Audited;
+
 // 'rejected' = 관리자 반려(연결 세션 회수 → 재산정). TBO-05에서 추가.
 export type PayoutStatus = 'pending' | 'confirmed' | 'paid' | 'rejected';
 

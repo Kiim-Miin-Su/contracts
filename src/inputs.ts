@@ -164,6 +164,25 @@ export type UpdateEnrollmentInput = {
   reason: string;
 };
 
+export type CreateInstructorContractInput = {
+  instructorId: ID;
+  monthlyHours: number;
+  hourlyRate: number;
+  periodStart: ISODate;
+  periodEnd?: ISODate | null;
+  memo?: string | null;
+};
+
+export type UpdateInstructorContractInput = {
+  monthlyHours?: number;
+  hourlyRate?: number;
+  periodStart?: ISODate;
+  periodEnd?: ISODate | null;
+  active?: boolean;
+  memo?: string | null;
+  reason: string;
+};
+
 export type CreateSubjectInput = {
   code: string;
   name: string;
