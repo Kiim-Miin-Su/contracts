@@ -106,6 +106,20 @@ export type AvailabilityImpactConflict = AvailabilityImpactResponse & {
   approvalRequired: true;
 };
 
+/**
+ * 세션 참여자 단일 규칙: 명시 코호트가 있으면 그것을 우선하고, 비어 있을 때만
+ * 해당 코스의 활성 수강생을 사용한다. backend와 frontend가 같은 정렬·중복 제거를 소비한다.
+ */
+export function resolveSessionParticipantIds(
+  explicitStudentIds: readonly ID[] | null | undefined,
+  activeEnrollmentStudentIds: readonly ID[],
+): ID[] {
+  const source = explicitStudentIds?.length
+    ? explicitStudentIds
+    : activeEnrollmentStudentIds;
+  return [...new Set(source.map(Number))].sort((a, b) => a - b);
+}
+
 // 주간 표/캘린더용 enriched 읽기모델(세션 + 라벨·색). 백엔드 GET /schedule 응답.
 export type ScheduleRow = ClassSession & {
   weekday: number; // 0(일)~6(토)
