@@ -16,7 +16,7 @@ import type {
   ScheduleSeriesRepeatKind,
 } from './schedule';
 import type { Course, Subject } from './catalog';
-import type { Enrollment } from './enrollment';
+import type { Enrollment, EnrollmentStatus } from './enrollment';
 import type {
   CounselFormInputSnapshot,
   CounselResult,
@@ -146,9 +146,22 @@ export type LinkParentInput = {
 export type CreateEnrollmentInput = {
   studentId: ID;
   courseId: ID;
+  counselCardId?: ID;
   roadmapId?: ID;
+  startDate?: ISODate;
+  endDate?: ISODate;
   totalSessions?: number;
   memo?: string;
+};
+
+/** 수강 원부의 업무 상태/기간 수정. reason은 audit command metadata이며 enrollments 컬럼이 아니다. */
+export type UpdateEnrollmentInput = {
+  status?: EnrollmentStatus;
+  startDate?: ISODate | null;
+  endDate?: ISODate | null;
+  totalSessions?: number | null;
+  memo?: string | null;
+  reason: string;
 };
 
 export type CreateSubjectInput = {
