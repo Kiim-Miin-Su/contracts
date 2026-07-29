@@ -341,6 +341,7 @@ export type UpdateClassSessionInput = {
   color?: string;
   status?: SessionStatus;
   instructorAttendance?: InstructorAttendanceStatus;
+  clearInstructorAttendance?: boolean; // 관리자 미선택 복귀
   scope?: RecurrenceScope; // 시리즈 편집 적용 범위
   expectedSeriesVersion?: number; // [TBO-29C C3] series edit CAS — 불일치 시 409 SERIES_VERSION_STALE
   force?: boolean;
@@ -348,6 +349,8 @@ export type UpdateClassSessionInput = {
   price?: number; // [v0.1.14]
   mode?: SessionMode; // [v0.1.16] 수업방식
   isPublic?: boolean;
+  acknowledgeAccountingImpact?: boolean;
+  expectedAccountingImpactHash?: string;
 };
 
 // [v0.1.14 — TBO-16 #9] 강사 수업 요청 생성(승인 대기). 세션 생성 Input과 동일 검증 규약.

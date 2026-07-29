@@ -1,7 +1,13 @@
 // 스케줄 엔진(Lantiv형) 자원: 강의실 · 가용/불가 시간. (상세: docs/scheduling.md)
-import type { ID, ISODate } from './common';
+import type { ID, ISODate, ISOInstant } from './common';
 import type { AccountRole } from './account';
-import type { ClassSession, RecurrenceScope, SessionKind, SessionMode, SessionStatus } from './session';
+import type {
+  ClassSession,
+  RecurrenceScope,
+  SessionKind,
+  SessionMode,
+  SessionStatus,
+} from './session';
 
 // 강의실(Room/Location). 일간 뷰 컬럼 · 이중예약/capacity 충돌 기준.
 export type Room = {
@@ -151,6 +157,61 @@ export type ScheduleResources = {
   courses: ScheduleCourseOption[];
 };
 
+export type ScheduleQuery = {
+  from?: ISODate;
+  to?: ISODate;
+  instructorId?: ID;
+  roomId?: ID;
+  studentId?: ID;
+};
+
+export type ScheduleDeleteOptions = {
+  scope?: RecurrenceScope;
+  expectedSeriesVersion?: number;
+  acknowledgeAccountingImpact?: boolean;
+  expectedAccountingImpactHash?: string;
+};
+
+export type ConflictCheckInput = {
+  sessionDate: ISODate;
+  startTime: string;
+  endTime?: string;
+  durationMinutes?: number;
+  instructorId?: ID;
+  roomId?: ID;
+  studentIds?: ID[];
+  ignoreSessionId?: ID;
+  mode?: SessionMode;
+};
+
+export type InstructorAttendanceSummary = {
+  from?: ISODate;
+  to?: ISODate;
+  rows: Array<{
+    instructorId: ID;
+    instructorName: string;
+    held: number;
+    present: number;
+    late: number;
+    absent: number;
+    makeup: number;
+    unmarked: number;
+    attendanceRate: number | null;
+    teachingMinutes: number;
+    teachingHours: number;
+  }>;
+  totals: {
+    instructors: number;
+    held: number;
+    present: number;
+    late: number;
+    absent: number;
+    makeup: number;
+    unmarked: number;
+    teachingHours: number;
+  };
+};
+
 // ── 캘린더 뷰 프리셋(TBO-12 P1, v0.1.12) ──────────────────────
 // 필터·스플릿·국가(시차) 조합을 이름으로 저장 — "미국 학생 주간"처럼 반복 조회를 원클릭화.
 // [자산화] localStorage가 아닌 DB 컬렉션(calendar_view_presets): 직원 공용 프리셋 = 사내 자산.
@@ -233,8 +294,39 @@ export type ScheduleRequest = {
   status: ScheduleRequestStatus;
   reason?: string; // 반려 사유(반려 시 필수 — Q2 결정 2026-07-06)
   decidedBy?: ID; // 승인/반려한 매니저
-  decidedAt?: string; // ISO datetime
+  decidedAt?: ISOInstant;
   createdSessionId?: ID; // 승인 산출물 세션 역참조
+  createdAt?: ISOInstant;
+  updatedAt?: ISOInstant;
+};
+
+export type UpdateScheduleRequestInput = Partial<Pick<ScheduleRequest,
+  | 'courseId'
+  | 'instructorId'
+  | 'roomId'
+  | 'sessionDate'
+  | 'startTime'
+  | 'endTime'
+  | 'durationMinutes'
+  | 'studentIds'
+  | 'topic'
+  | 'memo'
+  | 'kind'
+  | 'mode'
+  | 'requestReason'
+  | 'scope'
+  | 'availabilityKind'
+  | 'availabilityWeekday'
+  | 'availabilityStartTime'
+  | 'availabilityEndTime'
+  | 'availabilityEffectiveFrom'
+  | 'availabilityEffectiveTo'
+>>;
+
+export type ScheduleRequestApprovalOptions = {
+  forceConflicts?: boolean;
+  acknowledgeAccountingImpact?: boolean;
+  expectedAccountingImpactHash?: string;
 };
 
 // ── 범용 변경 이력 audit_log (TBO-16 #7, v0.1.14) ──────────────
