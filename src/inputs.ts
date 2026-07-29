@@ -115,8 +115,8 @@ export type ParentLinkInput = {
 /** 학생 원부+희망 수업+보호자 관계를 한 transaction으로 생성하는 command 계약. */
 export type CreateStudentAggregateInput = {
   student: CreateStudentInput;
-  /** 관심 희망 수업은 선택 사항이다. 빈 배열은 아직 희망 수업이 정해지지 않은 상태를 뜻한다. */
-  interests: StudentInterestInput[];
+  /** 관심 희망 수업은 선택 사항이다. 생략/빈 배열은 아직 희망 수업이 정해지지 않은 상태를 뜻한다. */
+  interests?: StudentInterestInput[];
   guardians?: ParentLinkInput[];
   /** v0.2.5 이하 클라이언트 전환용. guardians와 동시 사용 금지. */
   guardian?: ParentLinkInput;
