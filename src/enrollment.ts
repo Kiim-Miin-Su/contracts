@@ -7,15 +7,15 @@ export type Enrollment = {
   studentId: ID;
   courseId: ID;
   /** 상담에서 수강으로 전환된 경우 원 상담카드 추적 키. */
-  counselCardId?: ID;
+  counselCardId?: ID | null;
   /** 코스 담당 강사와 다른 개별 배정이 필요한 경우에만 사용한다. */
-  instructorId?: ID;
-  roadmapId?: ID;
+  instructorId?: ID | null;
+  roadmapId?: ID | null;
   status: EnrollmentStatus;
-  startDate?: ISODate;
-  endDate?: ISODate;
-  totalSessions?: number;
+  startDate?: ISODate | null;
+  endDate?: ISODate | null;
+  totalSessions?: number | null;
   completedSessions?: number;
-  memo?: string;
+  memo?: string | null;
   enrolledAt: ISODate;
 } & Audited;
