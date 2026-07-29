@@ -29,6 +29,7 @@ import type {
   CounselResult,
   CounselStatus,
 } from './counsel';
+import type { ProfileChangeFields } from './account';
 
 // ─────────── 학생/학부모 ───────────
 export type CreateInstructorInput = {
@@ -117,6 +118,12 @@ export type UpsertAttendanceInput = {
 
 export type ClearAttendanceInput = {
   reason: string;
+};
+
+export type CreateProfileChangeRequestInput = ProfileChangeFields & {
+  currentPassword: string;
+  reason: string;
+  verificationChallengeId?: ID;
 };
 
 // 학생 등록 시 함께 연결되는 학부모(임베드용 — studentId는 신규 학생으로 자동 결정)

@@ -1,4 +1,4 @@
-import type { ID } from './common';
+import type { ID, ISOInstant } from './common';
 
 export type AccountRole =
   | 'student'
@@ -22,4 +22,31 @@ export type WebIdCheckResult = {
   exists: boolean;
   name?: string;
   role?: AccountRole;
+};
+
+export type ProfileChangeFields = Partial<{
+  name: string;
+  webId: string;
+  email: string;
+  phone: string | null;
+  countryCode: string | null;
+  timeZone: string | null;
+}>;
+
+export type ProfileChangeRequestStatus = 'pending' | 'approved' | 'rejected';
+
+export type ProfileChangeRequest = {
+  id: ID;
+  requesterId: ID;
+  baseProfileVersion: number;
+  beforeValues: ProfileChangeFields;
+  requestedChanges: ProfileChangeFields;
+  reason: string;
+  status: ProfileChangeRequestStatus;
+  decidedBy?: ID | null;
+  decidedAt?: ISOInstant | null;
+  rejectionReason?: string | null;
+  appliedProfileVersion?: number | null;
+  createdAt: ISOInstant;
+  updatedAt: ISOInstant;
 };
