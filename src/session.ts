@@ -120,4 +120,14 @@ export type ReportTemplate = {
   name: string;
   content: string;
   homework?: string;
+  /** 템플릿 작성자. null/undefined 레거시·기본 템플릿은 관리자만 변경한다. */
+  createdBy?: ID | null;
 };
+
+export type CreateReportTemplateInput = {
+  name: string;
+  content: string;
+  homework?: string;
+};
+
+export type UpdateReportTemplateInput = CreateReportTemplateInput;
