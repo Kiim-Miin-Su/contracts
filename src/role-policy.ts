@@ -1,6 +1,5 @@
-import type { AccountRole } from './account';
-
-export type StaffRole = Extract<AccountRole, 'instructor' | 'manager' | 'admin' | 'super_admin'>;
+import type { StaffRole } from './account';
+export type { StaffRole } from './account';
 
 export type RoleCapability =
   | 'staff.login'

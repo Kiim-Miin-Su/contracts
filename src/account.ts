@@ -8,6 +8,9 @@ export type AccountRole =
   | 'admin'
   | 'super_admin';
 
+export type StaffRole = Extract<AccountRole, 'instructor' | 'manager' | 'admin' | 'super_admin'>;
+export type StaffAccountStatus = 'pending' | 'active' | 'rejected';
+
 // 로그인 계정 (users). web id = nickname/username.
 export type Account = {
   id: ID;
@@ -22,6 +25,49 @@ export type WebIdCheckResult = {
   exists: boolean;
   name?: string;
   role?: AccountRole;
+};
+
+export type StaffProfile = {
+  id: ID;
+  webId: string;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  role: StaffRole;
+  status: StaffAccountStatus;
+  countryCode?: string | null;
+  timeZone?: string | null;
+  profileVersion: number;
+  smsVerificationAvailable?: boolean;
+  emailVerified?: boolean;
+};
+
+export type StaffAccountSummary = StaffProfile & {
+  createdAt?: ISOInstant;
+  updatedAt?: ISOInstant;
+  deletedAt?: ISOInstant | null;
+};
+
+export type PendingStaffAccount = Pick<
+  StaffAccountSummary,
+  'id' | 'webId' | 'name' | 'role' | 'status' | 'emailVerified'
+> & {
+  email: string;
+  createdAt: ISOInstant;
+  phone?: string | null;
+  university?: string | null;
+  major?: string | null;
+  birthYear?: number | null;
+};
+
+export type StaffLoginResult = {
+  account: Pick<StaffProfile, 'id' | 'name' | 'role'> & { mustChangePassword: boolean };
+};
+
+export type StaffSignupResult = {
+  ok: boolean;
+  message: string;
+  account: Pick<StaffProfile, 'id' | 'webId' | 'name' | 'role' | 'status'>;
 };
 
 export type ProfileChangeFields = Partial<{

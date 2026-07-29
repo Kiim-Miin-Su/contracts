@@ -67,7 +67,7 @@ export type CreateStudentInput = {
   birthDate: ISODate;
   phone?: string;
   grade: number; // 0=Kinder, 1..13=G1..G13
-  schoolName?: string;
+  schoolName: string;
   residenceType?: ResidenceType;
   address?: string;
   addressDetail?: string;
@@ -385,7 +385,7 @@ export type CreateScheduleRequestInput = {
 export type UpsertSessionReportInput = {
   sessionId: ID;
   studentId: ID;
-  content?: string;
+  content: string;
   progressPage?: string;
   homework?: string;
   // [v0.1.14 — A1 drift 보정] BE CreateReportDto·FE api.reports.create가 이미 쓰던 필드를 계약에 편입.
