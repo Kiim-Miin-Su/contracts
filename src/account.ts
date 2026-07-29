@@ -50,3 +50,33 @@ export type ProfileChangeRequest = {
   createdAt: ISOInstant;
   updatedAt: ISOInstant;
 };
+
+export type AuthEventType =
+  | 'login_success'
+  | 'login_failure'
+  | 'logout'
+  | 'recover_id_requested'
+  | 'recover_id_completed'
+  | 'password_reset_requested'
+  | 'password_reset_completed'
+  | 'refresh_reuse_blocked'
+  | 'csrf_origin_blocked';
+
+/** 관리자 조회용 최소 projection. hash·request id·user-agent는 응답에 포함하지 않는다. */
+export type AuthEventRecord = {
+  id: ID;
+  eventType: AuthEventType;
+  userId?: ID | null;
+  success: boolean;
+  failureCode?: string | null;
+  at: ISOInstant;
+};
+
+export type AuthEventQuery = {
+  userId?: ID;
+  eventType?: AuthEventType;
+  success?: boolean;
+  from?: ISOInstant;
+  to?: ISOInstant;
+  limit?: number;
+};
