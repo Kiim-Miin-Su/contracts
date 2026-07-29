@@ -59,6 +59,12 @@ export type ScheduleRow = ClassSession & {
   // 코호트(코스 수강생) — 학생 차원 색/라벨·필터·개인 스케줄용(enrollment status != drop만)
   studentIds: ID[];
   studentNames: string[];
+  // 종료된 수업에서 강사 또는 학생 출결이 비어 있으면 true. 상태 뱃지/출결 탭이 같은 서버 파생값을 사용한다.
+  attendanceRequired: boolean;
+  missingAttendance: {
+    instructor: boolean;
+    studentIds: ID[];
+  };
   seriesVersion?: number; // [TBO-29C C3] series edit CAS — scope 편집/삭제 시 expectedSeriesVersion으로 회신
 };
 
