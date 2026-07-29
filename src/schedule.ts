@@ -362,8 +362,22 @@ export type ScheduleRequest = {
   decidedBy?: ID; // 승인/반려한 매니저
   decidedAt?: ISOInstant;
   createdSessionId?: ID; // 승인 산출물 세션 역참조
+  batchKey?: string; // 반복 요청 묶음의 idempotency key
+  batchIndex?: number; // 묶음 내 결정적 순서(0부터)
   createdAt?: ISOInstant;
   updatedAt?: ISOInstant;
+};
+
+export type ScheduleRequestBulkConflict = {
+  requestIndex: number;
+  conflict: Conflict;
+};
+
+export type ScheduleRequestBulkResult = {
+  rows: ScheduleRequest[];
+  conflicts: ScheduleRequestBulkConflict[];
+  /** 같은 requester+key+payload를 재시도해 기존 결과를 반환했으면 true. */
+  replayed: boolean;
 };
 
 export type UpdateScheduleRequestInput = Partial<Pick<ScheduleRequest,

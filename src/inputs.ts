@@ -382,6 +382,14 @@ export type CreateScheduleRequestInput = {
   availabilityEffectiveTo?: ISODate;
 };
 
+/** 반복 수업 승인 요청을 한 번에 저장하는 원자 command. */
+export type CreateScheduleRequestBulkInput = {
+  /** 클라이언트가 한 제출 시도에 한 번 발급하고 network retry에 재사용하는 UUID v4. */
+  idempotencyKey: string;
+  /** 현재는 반복 session_create 전용. 서버가 전체 검증 뒤 한 transaction으로 저장한다. */
+  requests: CreateScheduleRequestInput[];
+};
+
 export type UpsertSessionReportInput = {
   sessionId: ID;
   studentId: ID;
