@@ -12,3 +12,4 @@ export * from './event';
 export * from './notification';
 export * from './workload';
 export * from './inputs';
+export * from './projections';
