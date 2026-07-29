@@ -22,6 +22,11 @@ export type CounselForm = {
 
 /** 각 상담 차수가 생성된 시점의 전체 상담 페이지. 이후 최초 폼 수정과 독립적으로 보존한다. */
 export type CounselFormSnapshot = Omit<CounselForm, 'id' | 'createdAt'>;
+/** 내부 상담 UI가 회차 snapshot에서 수정할 수 있는 필드. 작성 메타데이터는 서버가 현재 폼에서 병합한다. */
+export type CounselFormInputSnapshot = Pick<
+  CounselFormSnapshot,
+  'studentId' | 'status' | 'referenceNotes' | 'nextContactAt'
+>;
 
 export type CounselRound = {
   id: ID;

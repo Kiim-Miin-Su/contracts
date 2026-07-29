@@ -18,9 +18,7 @@ import type {
 import type { Course, Subject } from './catalog';
 import type { Enrollment } from './enrollment';
 import type {
-  CounselSource,
-  CounselSubmitterType,
-  CounselFormSnapshot,
+  CounselFormInputSnapshot,
   CounselResult,
   CounselStatus,
 } from './counsel';
@@ -337,10 +335,7 @@ export type UpsertSessionReportInput = {
 // ─────────── 상담 ───────────
 export type CreateCounselInput = {
   studentId: ID;
-  source: CounselSource;
-  /** 폼 작성 주체. 외부 연동/legacy 호출은 생략 시 unknown으로 저장된다. */
-  submitterType?: CounselSubmitterType;
-  assignedStaffId?: ID;
+  /** 내부 작성 source/submitter/assigned staff는 서버가 JWT actor에서 결정한다. */
   referenceNotes?: string;
   /** 상담 예약 캘린더의 현재 예정 시각. 타임존을 포함한 instant로 저장된다. */
   nextContactAt?: ISOInstant;
@@ -348,17 +343,14 @@ export type CreateCounselInput = {
 
 export type UpdateCounselInput = {
   status?: CounselStatus;
-  source?: CounselSource;
-  submitterType?: CounselSubmitterType;
   studentId?: ID;
-  assignedStaffId?: ID | null;
+  /** source/submitter/assigned staff는 내부 API에서 수정할 수 없는 서버 소유 메타데이터다. */
   referenceNotes?: string | null;
   /** null은 예정 시각 해제, undefined는 미변경이다. */
   nextContactAt?: ISOInstant | null;
 };
 
 export type UpdateCounselRoundInput = {
-  counselorId?: ID | null;
   scheduledAt?: ISODate | null;
   completedAt?: ISODate | null;
   isCompleted?: boolean;
@@ -367,18 +359,17 @@ export type UpdateCounselRoundInput = {
   result?: CounselResult | null;
   nextAction?: string | null;
   nextContactAt?: ISOInstant | null;
-  formSnapshot?: CounselFormSnapshot;
+  formSnapshot?: CounselFormInputSnapshot;
 };
 
 export type CreateCounselRoundInput = {
-  counselorId?: ID;
   summary?: string;
   detail?: string;
   result?: CounselResult;
   nextAction?: string;
   nextContactAt?: ISOInstant;
-  /** 생략한 legacy 호출은 서버가 현재 상담 폼에서 생성한다. 신규 UI는 전체 페이지를 전송한다. */
-  formSnapshot?: CounselFormSnapshot;
+  /** 생략 시 서버가 현재 폼을 snapshot하며, 입력 시에도 편집 가능 필드만 받는다. */
+  formSnapshot?: CounselFormInputSnapshot;
 };
 
 // ─────────── 결제/지출/강사페이 ───────────
