@@ -5,7 +5,14 @@ import type { ID, ISODate, ISOInstant } from './common';
 import type { StudentGender, StudentStatus, ResidenceType } from './people';
 import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
-import type { SessionStatus, RecurrenceScope, SessionKind, SessionMode, InstructorAttendanceStatus } from './session';
+import type {
+  AttendanceStatus,
+  SessionStatus,
+  RecurrenceScope,
+  SessionKind,
+  SessionMode,
+  InstructorAttendanceStatus,
+} from './session';
 import type {
   AvailabilityOwner,
   AvailabilityKind,
@@ -101,6 +108,16 @@ export type CreateStudentAcademicHistoryInput = {
 };
 
 export type UpdateStudentAcademicHistoryInput = Partial<Omit<CreateStudentAcademicHistoryInput, 'studentId'>>;
+
+export type UpsertAttendanceInput = {
+  sessionId: ID;
+  studentId: ID;
+  status: AttendanceStatus;
+};
+
+export type ClearAttendanceInput = {
+  reason: string;
+};
 
 // 학생 등록 시 함께 연결되는 학부모(임베드용 — studentId는 신규 학생으로 자동 결정)
 export type ParentLinkInput = {
