@@ -1,5 +1,6 @@
 export * from './common';
 export * from './account';
+export * from './role-policy';
 export * from './people';
 export * from './catalog';
 export * from './enrollment';
