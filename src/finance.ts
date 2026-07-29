@@ -1,4 +1,4 @@
-import type { ID, ISODate, Audited } from './common';
+import type { ID, ISODate, ISOInstant, Audited } from './common';
 
 export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'refunded' | 'partial_refund';
 export type PaymentMethod = 'card' | 'transfer' | 'cash' | 'point' | 'etc';
@@ -139,15 +139,19 @@ export type InstructorPayout = {
   instructorId: ID;
   periodStart: ISODate;
   periodEnd: ISODate;
-  sessionCount?: number; // 정산 대상 수업 수
-  totalMinutes?: number; // 총 시수(분)
-  computedAmount?: number; // 자동 산정액(불변 기준) — TBO-05
+  sessionCount: number; // 정산 대상 수업 수
+  totalMinutes: number; // 총 시수(분)
+  computedAmount: number; // 자동 산정액(불변 기준) — TBO-05
   adjustedAmount?: number; // 관리자 급여 수정액(있으면 우선) — TBO-05
   adjustReason?: string;
   amount: number; // 실효 지급액 = adjustedAmount ?? computedAmount
   status: PayoutStatus;
-  lines?: PayoutLine[]; // 산정 명세(세션별) — TBO-05
+  lines: PayoutLine[]; // 산정 명세(세션별) — TBO-05
   rejectedReason?: string;
-  confirmedAt?: ISODate;
-  paidAt?: ISODate;
+  confirmedAt?: ISOInstant;
+  paidAt?: ISOInstant;
+  /** paid→rejected 지급 회수 시각. payout_reversal 원장과 같은 transaction에 기록한다. */
+  reversedAt?: ISOInstant;
+  /** 단순 반려와 지급 회수를 구분하는 회수 사유. */
+  reversedReason?: string;
 };
