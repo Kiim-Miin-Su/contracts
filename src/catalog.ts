@@ -37,3 +37,23 @@ export type RoadmapCourse = {
   courseId: ID;
   sortOrder: number;
 };
+
+/**
+ * [TBO-79 F1] 국가·시간대 참조 데이터 — `GET /catalog/countries`의 공유 wire.
+ *
+ * 종전엔 backend `catalog/country.entity.ts`와 frontend `lib/api/auth-account.ts`가 각자
+ * 선언했고 이미 드리프트가 있었다(`flag`가 BE 필수 / FE optional). CRUD 표면 게이트는
+ * `contract: ['Country']`를 초록으로 통과시켰는데, 공유 타입은 **존재하지 않았고**
+ * `paneCountryInstructor`에 부분 문자열이 걸린 것뿐이었다(게이트 방법론 결손 F1).
+ */
+export type Country = {
+  id: ID;
+  /** ISO 3166-1 alpha-2 또는 권역 분할 코드(US-W) */
+  code: string;
+  nameKo: string;
+  nameEn: string;
+  /** 대표 IANA tz */
+  timeZone: string;
+  flag: string | null;
+  sortOrder: number;
+};
