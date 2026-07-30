@@ -12,3 +12,23 @@ export type Audited = {
   createdAt?: ISODate;
   updatedAt?: ISODate;
 };
+
+/**
+ * [TBO-79 I2] soft-delete 명령의 공용 응답.
+ *
+ * 12개 backend 서비스와 9개 frontend 호출부가 `{ id: number; deleted: true }`를 각자 인라인으로
+ * 선언하고 있었다. 모양이 같아 지금은 문제가 없지만, 사본이 21개면 한 곳만 `deleted: boolean`으로
+ * 바뀌어도 아무도 모른다(실제로 schedule-requests·availability는 이미 `boolean`으로 갈라져 있다).
+ *
+ * `deleted: true`는 "이 응답이 왔다 = 삭제됐다"는 뜻이다 — 실패는 예외로 전달되지 응답 본문의
+ * `false`로 오지 않는다. 그래서 리터럴 true가 정확하다.
+ */
+export type DeletedResult = {
+  id: ID;
+  deleted: true;
+};
+
+/** 본문 없는 성공 응답 — `{ ok: true }`. 실패는 예외(4xx/5xx)로 전달된다. */
+export type OkResult = {
+  ok: boolean;
+};
