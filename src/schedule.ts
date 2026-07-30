@@ -424,3 +424,27 @@ export type AuditLog = {
   changes?: Record<string, { before?: unknown; after?: unknown }>;
   reason?: string;
 };
+
+/**
+ * [TBO-79 E5] 세션 변경/삭제 응답의 공유 wire.
+ *
+ * 종전엔 frontend가 `{ row, conflicts, updated }`만 선언해 서버가 함께 보내는
+ * `accountingImpact`·`accountingImpactHash`가 타입에서 보이지 않았다. 확인(ack)한 영향과 실제
+ * 적용된 영향을 대조하는 코드가 이 필드를 쓰는데, 계약에 없으니 컴파일러가 지켜주지 못했다.
+ * `markInstructorAttendance`는 내부적으로 update를 재사용하므로 같은 모양을 돌려준다.
+ */
+export type ScheduleMutationResult<TRow, TConflict> = {
+  row: TRow;
+  conflicts: TConflict[];
+  updated: number;
+  accountingImpact?: SessionAccountingImpact;
+  accountingImpactHash?: string;
+};
+
+export type ScheduleDeleteResult = {
+  id: ID;
+  deleted: boolean;
+  removedIds: ID[];
+  accountingImpact?: SessionAccountingImpact;
+  accountingImpactHash?: string;
+};

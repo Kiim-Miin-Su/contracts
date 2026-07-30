@@ -27,6 +27,7 @@ export type WebIdCheckResult = {
   role?: AccountRole;
 };
 
+// smsVerificationAvailable·emailVerified는 서버가 항상 채운다(ProfileResponseDto가 implements).
 export type StaffProfile = {
   id: ID;
   webId: string;
@@ -38,31 +39,62 @@ export type StaffProfile = {
   countryCode?: string | null;
   timeZone?: string | null;
   profileVersion: number;
-  smsVerificationAvailable?: boolean;
-  emailVerified?: boolean;
+  smsVerificationAvailable: boolean;
+  emailVerified: boolean;
 };
 
-export type StaffAccountSummary = StaffProfile & {
-  createdAt?: ISOInstant;
-  updatedAt?: ISOInstant;
-  deletedAt?: ISOInstant | null;
-};
-
-export type PendingStaffAccount = Pick<
-  StaffAccountSummary,
-  'id' | 'webId' | 'name' | 'role' | 'status' | 'emailVerified'
-> & {
-  // [TBO-79 E1] 서버는 email 미기재 가입 행을 그대로 돌려준다(users.email은 nullable이고
-  //  auth.controller가 `as string`으로 캐스팅하고 있었다). 필수 string 선언은 거짓말이었다.
-  email?: string | null;
-  createdAt: ISOInstant;
-  phone?: string | null;
+/**
+ * `GET /users`·`/users/{id}`·`/auth/pending`·승인/반려 응답의 공유 wire.
+ *
+ * [TBO-79 E5] 종전 선언은 서버가 실제로 내보내는 것의 **진부분집합**이었다. backend `toSafe()`가
+ * StaffAccount에서 비밀 6개만 빼고 전부 spread하므로 authVersion·mustChangePassword·approvedBy·
+ * approvedAt·lastLoginAt·university·major·birthYear가 계약 밖으로 흘러나가고 있었다.
+ * frontend는 그래서 `detail()` 호출부에서 `& { rrnMasked?; university?; major?; birthYear? }`를
+ * 손으로 덧붙이고 있었다 — 계약이 부족하다는 걸 코드가 이미 알고 있었던 셈이다.
+ *
+ * ⚠ 이 타입은 backend `SafeAccount`와 **정확히 일치**해야 한다. user.entity.ts가 컴파일 타임
+ * 양방향 단언으로 이를 강제한다(초과·누락 둘 다 빌드 실패). 필드를 늘릴 땐 양쪽을 함께 고칠 것.
+ */
+export type StaffAccountSummary = Omit<StaffProfile, 'smsVerificationAvailable'> & {
+  // smsVerificationAvailable은 `GET /users/me/profile` 전용 파생값이라 계정 행 응답에는 없다.
+  emailVerified: boolean;
+  /** role/status/credential 변경 시 +1 — 구 토큰 즉시 무효화 기준. 미설정=1. */
+  authVersion?: number;
+  /** 임시 비밀번호 계정. 변경 완료 전 업무 API가 차단된다. */
+  mustChangePassword?: boolean;
+  approvedBy?: number | null;
+  approvedAt?: ISOInstant | null;
+  /** 최신 로그인 성공 시각 summary — 이력 진실원은 auth_events다. */
+  lastLoginAt?: ISOInstant | null;
   university?: string | null;
   major?: string | null;
   birthYear?: number | null;
+  createdAt: ISOInstant;
+  updatedAt: ISOInstant;
+  deletedAt?: ISOInstant | null;
+  deletedBy?: number | null;
 };
 
+/**
+ * 계정 상세·승인 대기 목록 — 요약에 마스킹된 주민등록번호를 더한다.
+ * 평문·암호문은 어떤 응답에도 없다(복호 실패 시 null = fail-closed).
+ */
+export type StaffAccountDetail = StaffAccountSummary & {
+  rrnMasked: string | null;
+};
+
+/**
+ * [TBO-79 E5] 승인 대기 계정 = 상세와 같은 모양이다. 종전엔 Pick으로 좁혀 놓았지만 서버는
+ * `SafeAccount & { rrnMasked }`를 통째로 돌려주고 있었다(좁힌 선언이 실제 응답을 가렸다).
+ */
+export type PendingStaffAccount = StaffAccountDetail;
+
 export type StaffLoginResult = {
+  /**
+   * [TBO-79 E5] non-production에서만 발급되는 bearer 토큰. 운영에서는 HttpOnly 쿠키만 쓰므로
+   * 응답 본문에 없다. 계약에 선언되지 않은 채 wire에만 존재하던 자격증명 필드였다.
+   */
+  accessToken?: string;
   account: Pick<StaffProfile, 'id' | 'name' | 'role'> & { mustChangePassword: boolean };
 };
 
