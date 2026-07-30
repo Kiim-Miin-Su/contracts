@@ -52,7 +52,9 @@ export type PendingStaffAccount = Pick<
   StaffAccountSummary,
   'id' | 'webId' | 'name' | 'role' | 'status' | 'emailVerified'
 > & {
-  email: string;
+  // [TBO-79 E1] 서버는 email 미기재 가입 행을 그대로 돌려준다(users.email은 nullable이고
+  //  auth.controller가 `as string`으로 캐스팅하고 있었다). 필수 string 선언은 거짓말이었다.
+  email?: string | null;
   createdAt: ISOInstant;
   phone?: string | null;
   university?: string | null;

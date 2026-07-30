@@ -1,5 +1,6 @@
 import type { ID, ISOInstant } from './common';
 import type { CounselForm, CounselResult, CounselStatus } from './counsel';
+import type { Roadmap } from './catalog';
 import type { Enrollment } from './enrollment';
 import type {
   Parent,
@@ -81,4 +82,20 @@ export type CounselCorrelation = {
   totalForms: number;
   rows: CounselCorrelationRow[];
   enrolledSubjects: string[];
+};
+
+/**
+ * [TBO-79 E3] 로드맵 aggregate 읽기 투영 — backend service와 frontend api 클라이언트가
+ * 같은 리터럴을 각자 선언하고 있었다(사본 2개). 조인된 코스 요약까지 한 wire로 고정한다.
+ */
+export type RoadmapAggregateCourse = {
+  linkId: ID;
+  courseId: ID;
+  sortOrder: number;
+  courseName: string;
+  subjectId: ID;
+};
+
+export type RoadmapAggregate = Roadmap & {
+  courses: RoadmapAggregateCourse[];
 };

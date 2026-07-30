@@ -22,9 +22,12 @@ export type Course = {
 export type Roadmap = {
   id: ID;
   title: string;
-  description?: string;
-  targetGrade?: number;
-  durationWeeks?: number;
+  // [TBO-79 E2] 서버는 undefined가 아니라 **null**을 쓴다(roadmaps.service의 `?? null`).
+  //  종전 optional 선언은 `as unknown as` 이중 캐스팅으로 침묵당한 거짓말이었고, FE는
+  //  lib/domain/roadmaps.ts에서 `number | null | undefined`로 로컬 우회 중이었다.
+  description?: string | null;
+  targetGrade?: number | null;
+  durationWeeks?: number | null;
   isActive: boolean;
 };
 

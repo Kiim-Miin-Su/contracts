@@ -116,8 +116,23 @@ export type UpsertAttendanceInput = {
   status: AttendanceStatus;
 };
 
-export type ClearAttendanceInput = {
+/**
+ * [TBO-79 B4~B6] 회계 영향 확인 입력의 공용 형태.
+ * 완료 수업의 시수·정산 예상액을 바꾸는 명령은 전부 이 규약을 따른다 — 첫 요청은 409로 영향
+ * 미리보기와 지문을 돌려주고, 재요청이 같은 지문을 실어야 실행된다(맹목 확인 차단).
+ */
+export type AccountingAckInput = {
+  acknowledgeAccountingImpact?: boolean;
+  expectedAccountingImpactHash?: string;
+};
+
+export type ClearAttendanceInput = AccountingAckInput & {
   reason: string;
+};
+
+/** POST /reports/:id/reject — 승인 리포트 반려는 정산 적격을 되돌리므로 같은 확인 규약을 쓴다. */
+export type RejectReportInput = AccountingAckInput & {
+  reason?: string;
 };
 
 export type CreateProfileChangeRequestInput = ProfileChangeFields & {
@@ -226,9 +241,23 @@ export type CreateCourseInput = {
 
 export type CreateRoadmapInput = {
   title: string;
-  description?: string;
-  targetGrade?: number;
+  description?: string | null;
+  targetGrade?: number | null;
+  // [TBO-79 E4] 종전엔 계약에 없어 FE(`& { durationWeeks?: number }`)와 BE DTO가 각자 덧붙였다.
+  durationWeeks?: number | null;
   courseIds?: ID[]; // 연결할 코스(M:N, 순서대로)
+};
+
+/**
+ * [TBO-79 E4] 수정 입력 — 종전엔 계약이 없어 FE와 BE DTO가 서로 다른 nullability로 갈라져 있었다
+ * (FE `number | null` / BE `number`). null은 "전체/미지정으로 되돌린다"는 의도적 신호다.
+ */
+export type UpdateRoadmapInput = {
+  title?: string;
+  description?: string | null;
+  targetGrade?: number | null;
+  durationWeeks?: number | null;
+  isActive?: boolean;
 };
 
 // ─────────── 수업/출석/보고서 ───────────
