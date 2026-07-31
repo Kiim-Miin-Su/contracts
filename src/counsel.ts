@@ -1,4 +1,5 @@
 import type { ID, ISODate, ISOInstant } from './common';
+import type { Enrollment } from './enrollment';
 import type { StudentAggregate } from './people';
 
 export type CounselStatus = 'requested' | 'pending' | 'registered' | 'dropped';
@@ -48,4 +49,11 @@ export type CounselAggregate = {
   form: CounselForm;
   rounds: CounselRound[];
   student?: StudentAggregate | null;
+};
+
+/** [TBO-30E→TBO-80] 상담→수강 전환 결과 — 한 UoW에서 확정된 폼 전이와 신규 수강 행.
+ *  전환의 진실원은 `enrollment.counselCardId` FK다(status 표기는 그 파생 — 30E "FK로만 성립" 원칙). */
+export type ConvertCounselResult = {
+  form: CounselForm;
+  enrollment: Enrollment;
 };

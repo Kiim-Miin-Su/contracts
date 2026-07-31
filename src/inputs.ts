@@ -446,6 +446,18 @@ export type CreateStudentCounselIntakeInput = {
   counsel: Omit<CreateCounselInput, 'studentId'>;
 };
 
+/** [TBO-30E→TBO-80] 상담→수강 전환 command 입력. 대상 학생·상담 링크는 서버가 폼에서 결정한다
+ *  (CreateEnrollmentInput에서 studentId·counselCardId를 뺀 형상 — 전환은 폼이 주어다).
+ *  desiredSubjectId 정규화는 만들지 않는다: 희망 SSOT는 student_interests(TBO-30 §7 결정). */
+export type ConvertCounselInput = {
+  courseId: ID;
+  roadmapId?: ID;
+  startDate?: ISODate;
+  endDate?: ISODate;
+  totalSessions?: number;
+  memo?: string;
+};
+
 export type UpdateCounselInput = {
   status?: CounselStatus;
   studentId?: ID;
