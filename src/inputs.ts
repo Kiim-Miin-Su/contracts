@@ -130,6 +130,16 @@ export type ClearAttendanceInput = AccountingAckInput & {
   reason: string;
 };
 
+/** 강사 출결은 일정 편집과 분리된 회차 단위 사실 명령이다. */
+export type SetInstructorAttendanceInput = AccountingAckInput & {
+  status: InstructorAttendanceStatus;
+};
+
+/** 강사 출결 미선택 복귀. held 자동 역전이와 감사 사유를 같은 transaction에 남긴다. */
+export type ClearInstructorAttendanceInput = AccountingAckInput & {
+  reason: string;
+};
+
 /** POST /reports/:id/reject — 승인 리포트 반려는 정산 적격을 되돌리므로 같은 확인 규약을 쓴다. */
 export type RejectReportInput = AccountingAckInput & {
   reason?: string;
