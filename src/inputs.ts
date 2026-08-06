@@ -7,6 +7,7 @@ import type { PaymentMethod, ExpenseCategory } from './finance';
 import type { EventType, EventPriority } from './event';
 import type {
   AttendanceStatus,
+  Attendance,
   SessionStatus,
   RecurrenceScope,
   SessionKind,
@@ -292,6 +293,25 @@ export type CreateClassSessionInput = {
   price?: number; // [v0.1.14] 세션 단건 가격(상담 등 — 코스 정가와 별개)
   mode?: SessionMode; // [v0.1.16] 수업방식(기본 in_person)
   isPublic?: boolean; // 공통 일정: 승인된 전 직원에게 조회 공개(수정 권한은 확장하지 않음)
+};
+
+/**
+ * 과거 수업 이관 전용 명령.
+ * `held`를 직접 받지 않고 서버가 강사·학생 출결 사실을 함께 기록한 뒤 자동 전이한다.
+ */
+export type CreateHistoricalCompletedSessionInput = Omit<
+  CreateClassSessionInput,
+  'status' | 'seriesId'
+> & {
+  instructorId: ID;
+  studentIds: ID[];
+  importReason: string;
+};
+
+export type HistoricalCompletedSessionResult = {
+  row: ScheduleRow;
+  conflicts: Conflict[];
+  attendance: Attendance[];
 };
 
 /**
