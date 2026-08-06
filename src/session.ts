@@ -114,6 +114,50 @@ export type SessionReportView = SessionReport & {
   context: SessionReportContext;
 };
 
+/** 보고서 목록의 서버 검증 필터. 강사 actor의 instructorId는 JWT 본인으로 강제된다. */
+export type ReportListQuery = {
+  sessionId?: ID;
+  from?: ISODate;
+  to?: ISODate;
+  studentId?: ID;
+  subjectId?: ID;
+  instructorId?: ID;
+  status?: ReportStatus;
+  approvalStatus?: ReportApprovalStatus;
+};
+
+export type ReportWorklistQuery = Pick<
+  ReportListQuery,
+  'from' | 'to' | 'studentId' | 'subjectId' | 'instructorId'
+>;
+
+export type ReportWorklistItemType = 'report_missing' | 'report_draft' | 'report_rejected';
+
+/** 종료된 진행완료 회차에서 작성자가 조치해야 하는 학생별 리포트 항목. */
+export type ReportWorklistItem = {
+  id: string;
+  type: ReportWorklistItemType;
+  sessionId: ID;
+  instructorId: ID;
+  studentId: ID;
+  reportId?: ID;
+  subjectId?: ID;
+  sessionDate: ISODate;
+  startTime?: string;
+  topic?: string;
+  rejectedReason?: string;
+};
+
+/** 목록·작성 필요 화면·내비게이션 배지가 함께 소비하는 서버 모집단. */
+export type ReportWorklist = {
+  from: ISODate | null;
+  to: ISODate | null;
+  instructorId?: ID;
+  items: ReportWorklistItem[];
+  itemCount: number;
+  sessionCount: number;
+};
+
 // ── 리포트 템플릿(v0.1.12) ─────────────────────────────────────
 // [자산화] 강사가 자주 쓰는 리포트 내용/숙제 — zustand(휘발)에서 DB 컬렉션(report_templates)으로 이관.
 export type ReportTemplate = {
