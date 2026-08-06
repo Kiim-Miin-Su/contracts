@@ -3,6 +3,7 @@ import type { ID, ISODate, ISOInstant } from './common';
 import type { AccountRole } from './account';
 import type {
   ClassSession,
+  InstructorAttendanceStatus,
   RecurrenceScope,
   SessionKind,
   SessionMode,
@@ -343,7 +344,7 @@ export type CalendarViewPresetPane = {
 // 평면 컬럼(JSON payload 아님) — 요청 시점에도 course/instructor/room FK·코호트 무결성 검증.
 // 승인 = 기존 createSession 경로 재사용(충돌 409·force 재검사) 후 createdSessionId 역참조(transactions 패턴).
 export type ScheduleRequestStatus = 'pending' | 'approved' | 'rejected';
-export type ScheduleRequestKind = 'session_create' | 'session_update' | 'session_delete' | 'availability_upsert' | 'availability_delete';
+export type ScheduleRequestKind = 'session_create' | 'session_update' | 'session_delete' | 'availability_upsert' | 'availability_delete' | 'instructor_attendance_correction';
 
 export type ScheduleRequest = {
   id: ID;
@@ -363,6 +364,8 @@ export type ScheduleRequest = {
   memo?: string; // 강사 입력 메모 — 요청 DB에 저장되고 승인 시 class_sessions.memo로 전달
   studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
   requestReason?: string; // 요청자가 제출한 사유(반려 사유 reason과 분리)
+  instructorAttendanceBefore?: InstructorAttendanceStatus | null; // 정정 요청 생성 시점 DB snapshot(CAS)
+  requestedInstructorAttendance?: InstructorAttendanceStatus; // 승인 시 적용할 목표 강사 출결
   scope?: RecurrenceScope; // 반복 수업 변경 적용 범위(session_update)
   targetAvailabilityId?: ID;
   availabilityOwnerType?: AvailabilityOwner;
