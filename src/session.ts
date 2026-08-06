@@ -1,4 +1,4 @@
-import type { ID, ISODate } from './common';
+import type { ID, ISODate, ISOInstant } from './common';
 
 export type SessionStatus = 'scheduled' | 'held' | 'canceled' | 'no_show' | 'makeup';
 
@@ -76,6 +76,38 @@ export type SessionReport = {
   approvedAt?: ISODate;
   approvedBy?: ID;
   rejectedReason?: string;
+  /** 본문 revision. 내용 수정 때만 증가하며 승인/반려 상태 전이와 독립이다. */
+  version: number;
+  createdAt?: ISOInstant;
+  updatedAt?: ISOInstant;
+};
+
+/** 승인된 보고서의 본문 변경 전후를 보존하는 append-only 원장. */
+export type SessionReportRevision = {
+  id: ID;
+  reportId: ID;
+  beforeVersion: number;
+  afterVersion: number;
+  beforeContent: string;
+  afterContent: string;
+  beforeProgressPage?: string;
+  afterProgressPage?: string;
+  beforeHomework?: string;
+  afterHomework?: string;
+  reason: string;
+  editedBy: ID;
+  /** 목록 projection에서 users 조인으로 제공하는 편집자 표시명. */
+  editedByName?: string;
+  createdAt: ISOInstant;
+};
+
+/** manager+가 승인된 보고서를 수정할 때 사용하는 낙관적 잠금 입력. */
+export type ReviseApprovedSessionReportInput = {
+  expectedVersion: number;
+  reason: string;
+  content: string;
+  progressPage?: string;
+  homework?: string;
 };
 
 /**
