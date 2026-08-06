@@ -12,6 +12,7 @@ export type RoleCapability =
   | 'payout.readiness'
   | 'calendar.manage'
   | 'calendar.request-own'
+  | 'session-attendance.manage'
   | 'attendance.manage'
   | 'instructor.self'
   | 'counsel.manage'
@@ -68,6 +69,7 @@ export const CAPABILITY_ROLES = {
   'payout.readiness': ROLE_GROUPS.operations,
   'calendar.manage': ROLE_GROUPS.operations,
   'calendar.request-own': ROLE_GROUPS.staff,
+  'session-attendance.manage': ROLE_GROUPS.operations,
   'attendance.manage': ROLE_GROUPS.executive,
   'instructor.self': ['instructor'],
   'counsel.manage': ROLE_GROUPS.operations,
@@ -86,7 +88,8 @@ export const CAPABILITY_CATALOG = [
   { capability: 'payout.readiness', category: 'finance', label: '정산 준비 조회', description: '시수와 정산 준비 상태를 확인합니다.', configurable: true, executiveOnly: false },
   { capability: 'calendar.manage', category: 'calendar', label: '캘린더 관리', description: '수업과 일정을 생성·변경·삭제합니다.', configurable: true, executiveOnly: false },
   { capability: 'calendar.request-own', category: 'calendar', label: '본인 일정 요청', description: '본인 일정의 변경 승인을 요청합니다.', configurable: true, executiveOnly: false },
-  { capability: 'attendance.manage', category: 'attendance', label: '출결 변경', description: '학생·강사·직원의 출결을 생성·수정·초기화합니다.', configurable: false, executiveOnly: true },
+  { capability: 'session-attendance.manage', category: 'attendance', label: '수업 출결 관리', description: '수업 회차의 강사·학생 출결을 생성·수정·초기화합니다.', configurable: true, executiveOnly: false },
+  { capability: 'attendance.manage', category: 'attendance', label: '직원 근태 변경', description: '직원의 출근·휴가 기록을 생성·수정·초기화합니다.', configurable: false, executiveOnly: true },
   { capability: 'instructor.self', category: 'account', label: '강사 본인 범위', description: '담당 수업과 학생을 본인 범위로 조회합니다.', configurable: false, executiveOnly: false },
   { capability: 'counsel.manage', category: 'student', label: '상담 관리', description: '상담 원부와 회차를 조회하고 변경합니다.', configurable: true, executiveOnly: false },
   { capability: 'student.hard-delete', category: 'student', label: '학생 원부 삭제', description: '학생 원부를 위험 작업으로 삭제합니다.', configurable: true, executiveOnly: true },
