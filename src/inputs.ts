@@ -301,7 +301,7 @@ export type CreateClassSessionInput = {
  */
 export type CreateHistoricalCompletedSessionInput = Omit<
   CreateClassSessionInput,
-  'status' | 'seriesId'
+  'status' | 'seriesId' | 'force'
 > & {
   instructorId: ID;
   studentIds: ID[];
