@@ -94,6 +94,10 @@ export type CreateStudentFamilyRelationInput = {
   relatedStudentId: ID;
   relationType: 'sibling' | 'other';
   relationLabel?: string;
+  /** [TBO-86I-4] true면 같은 tx에서 두 학생의 보호자를 관계 행(join)으로 합집합 연결 —
+   *  보호자 원부 복사 0, 신규 링크는 비대표·비납부(기존 대표 불변), 중복 연결 skip.
+   *  (BE DTO에만 있던 필드의 계약 명문화 — input≡DTO 일치 규약.) */
+  linkGuardians?: boolean;
 };
 
 export type UpdateStudentFamilyRelationInput = Partial<Pick<
@@ -171,6 +175,10 @@ export type CreateStudentAggregateInput = {
   /** v0.2.5 이하 클라이언트 전환용. guardians와 동시 사용 금지. */
   guardian?: ParentLinkInput;
   courseId?: ID;
+  /** [TBO-86I-4] 등록 시점 "기존에 다니는 가족" 연결(선택, 0~10건) — 기존 재원생과의 관계를
+   *  학생·보호자·수강과 **같은 등록 tx**에서 생성한다(중간 실패 시 전부 rollback). 상세 화면의
+   *  가족 추가와 같은 검증(자기 자신 금지·canonical pair·중복 409)과 audit 규칙을 재사용한다. */
+  familyRelations?: CreateStudentFamilyRelationInput[];
 };
 
 /** 학생 원부와 희망 수업 전체를 원자 교체한다. 보호자 관계는 독립 relation CRUD를 사용한다. */
