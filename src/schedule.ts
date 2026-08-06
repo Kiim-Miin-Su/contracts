@@ -125,7 +125,7 @@ export type ScheduleRow = ClassSession & {
   weekday: number; // 0(일)~6(토)
   courseName: string;
   subjectName: string;
-  instructorName: string;
+  instructorName: string | null;
   roomName?: string;
   color?: string; // 과목 색(없으면 프론트 해시 색)
   // 코호트(코스 수강생) — 학생 차원 색/라벨·필터·개인 스케줄용(enrollment status != drop만)
@@ -163,7 +163,8 @@ export type ScheduleSeries = {
 // 서버가 날짜/요일/기간/시간/cohort/FK를 전체 정규화하고, series+occurrence 전체+audit를 한 transaction으로 저장.
 export type CreateScheduleSeriesCommand = {
   courseId: ID;
-  instructorId?: ID; // 미지정 시 코스 기본 강사
+  /** undefined=코스 기본 강사, null=명시적 배정중, 숫자=지정 강사 */
+  instructorId?: ID | null;
   roomId?: ID;
   studentIds?: ID[]; // 명시 코호트(부분 선택) — 미지정=코스 활성 수강생 파생
   repeat: {
@@ -209,8 +210,8 @@ export type ScheduleCourseOption = {
   id: ID;
   name: string;
   subjectId: ID; // 캘린더 과목 split/filter가 별도 /subjects 전량 조회 없이 쓰는 FK
-  instructorId: ID;
-  instructorName?: string;
+  instructorId: ID | null;
+  instructorName: string | null;
   subjectName: string;
   color?: string;
   durationMinutes: number; // 코스 진행시간(세션에서 파생, 없으면 기본값)
@@ -229,6 +230,23 @@ export type ScheduleQuery = {
   instructorId?: ID;
   roomId?: ID;
   studentId?: ID;
+  assignment?: 'assigned' | 'unassigned';
+};
+
+/** 배정중 회차의 담당 강사를 원자적으로 지정하거나 다시 배정중으로 돌리는 전용 명령. */
+export type UpdateSessionInstructorAssignmentInput = {
+  instructorId: ID | null;
+  reason: string;
+  /** 동시 변경 방지. null은 현재도 배정중이어야 한다는 의미다. */
+  expectedInstructorId?: ID | null;
+  /** true면 같은 transaction에서 코스 기본 담당자도 갱신한다. */
+  setCourseDefault?: boolean;
+};
+
+export type UpdateSessionInstructorAssignmentResult = {
+  row: ScheduleRow;
+  previousInstructorId: ID | null;
+  courseDefaultUpdated: boolean;
 };
 
 export type ScheduleDeleteOptions = {

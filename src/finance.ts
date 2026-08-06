@@ -108,7 +108,8 @@ export type PayoutWorksheetManualReason =
 export type PayoutWorksheetExcludedReason =
   | 'not_held'
   | 'instructor_absent'
-  | 'payout_linked';
+  | 'payout_linked'
+  | 'instructor_unassigned';
 
 export type PayoutWorksheetPricing = {
   kind: PayoutWorksheetPricingKind;

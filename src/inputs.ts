@@ -241,7 +241,7 @@ export type CreateSubjectInput = {
 export type CreateCourseInput = {
   name: string;
   subjectId: ID;
-  instructorId: ID;
+  instructorId?: ID | null;
   price: number;
   /** @deprecated v0.2.7 write는 hourlyRateOverride를 사용. legacy client 호환용. */
   hourlyRate?: number;
@@ -276,7 +276,8 @@ export type UpdateRoadmapInput = {
 //  instructorId 선택(미지정=코스 기본 강사)·startTime 필수·studentIds·status·force·kind·price.
 export type CreateClassSessionInput = {
   courseId: ID;
-  instructorId?: ID; // 미지정 시 코스 기본 강사
+  /** undefined=코스 기본 강사, null=명시적 배정중, 숫자=지정 강사 */
+  instructorId?: ID | null;
   roomId?: ID; // 강의실(스케줄 v5) — 추천→배정·일간뷰
   sessionDate: ISODate;
   startTime: string; // 'HH:mm'
@@ -321,7 +322,7 @@ export type HistoricalCompletedSessionResult = {
  */
 export type OpenClassCatalogInput = {
   subjectName: string;
-  instructorId: ID;
+  instructorId: ID | null;
   studentIds?: ID[];
   hourlyRateOverride?: number | null;
   coursePrice?: number;

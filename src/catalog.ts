@@ -10,7 +10,8 @@ export type Course = {
   id: ID;
   name: string;
   subjectId: ID;
-  instructorId: ID;
+  /** null = 담당 강사 배정 전. 가짜 강사 ID를 사용하지 않는다. */
+  instructorId: ID | null;
   price: number; // 정가(원)
   hourlyRate: number; // 유효 시급 = hourlyRateOverride ?? 강사 defaultHourlyRate
   hourlyRateOverride?: number | null; // 수업별 관리자 예외값. null이면 강사 기본 페이 사용
