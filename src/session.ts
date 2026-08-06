@@ -196,15 +196,28 @@ export type ReportTemplate = {
   id: ID;
   name: string;
   content: string;
+  progressPage?: string;
   homework?: string;
+  /** null이면 전역, 값이 있으면 해당 강사 계정에만 적용되는 템플릿. */
+  ownerUserId?: ID | null;
+  /** 같은 owner scope에서 하나만 허용되는 기본 템플릿. */
+  isDefault: boolean;
+  /** manager+가 지정하는 전역 강제 템플릿. ownerUserId와 함께 설정할 수 없다. */
+  isEnforced: boolean;
   /** 템플릿 작성자. null/undefined 레거시·기본 템플릿은 관리자만 변경한다. */
   createdBy?: ID | null;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type CreateReportTemplateInput = {
   name: string;
   content: string;
+  progressPage?: string;
   homework?: string;
+  ownerUserId?: ID | null;
+  isDefault?: boolean;
+  isEnforced?: boolean;
 };
 
 export type UpdateReportTemplateInput = CreateReportTemplateInput;
