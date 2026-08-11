@@ -78,7 +78,7 @@ export const CAPABILITY_ROLES = {
   //  종전 FE(instructor.self ∨ approval.manage) ≡ BE STAFF_ROLES 의미를 한 capability로 명문화.
   //  소유권(본인 담당 세션/본인 보고서)은 계속 서비스·DB 검증이 최종 권위다.
   'report.write': ROLE_GROUPS.staff,
-  'student.hard-delete': ['super_admin', 'admin'],
+  'student.hard-delete': ROLE_GROUPS.operations,
   'security.events.read': ['super_admin', 'admin'],
 } as const satisfies Record<RoleCapability, readonly StaffRole[]>;
 
@@ -98,7 +98,7 @@ export const CAPABILITY_CATALOG = [
   { capability: 'instructor.self', category: 'account', label: '강사 본인 범위', description: '담당 수업과 학생을 본인 범위로 조회합니다.', configurable: false, executiveOnly: false },
   { capability: 'counsel.manage', category: 'student', label: '상담 관리', description: '상담 원부와 회차를 조회하고 변경합니다.', configurable: true, executiveOnly: false },
   { capability: 'report.write', category: 'approval', label: '수업 보고서 작성', description: '수업 보고서를 작성·수정·제출·철회합니다(본인 담당 범위는 서버가 검증).', configurable: true, executiveOnly: false },
-  { capability: 'student.hard-delete', category: 'student', label: '학생 원부 삭제', description: '학생 원부를 위험 작업으로 삭제합니다.', configurable: true, executiveOnly: true },
+  { capability: 'student.hard-delete', category: 'student', label: '학생 원부 삭제', description: '학생 원부를 재인증 후 soft delete하고 연결 관계와 감사 이력을 함께 정리합니다.', configurable: true, executiveOnly: false },
   { capability: 'security.events.read', category: 'security', label: '보안 이력 조회', description: '로그인과 인증 보안 이력을 조회합니다.', configurable: true, executiveOnly: true },
 ] as const satisfies readonly CapabilityDefinition[];
 
