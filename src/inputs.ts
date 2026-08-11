@@ -51,7 +51,7 @@ export type CreateInstructorInput = {
 export type UpdateInstructorInput = {
   name?: string;
   phone?: string;
-  email?: string;
+  email?: string | null;
   university?: string | null;
   major?: string | null;
   birthYear?: number | null;
