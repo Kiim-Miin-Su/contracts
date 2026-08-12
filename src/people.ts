@@ -91,6 +91,7 @@ export type StudentAcademicHistory = {
 export type Instructor = {
   id: ID;
   name: string;
+  englishName: string;
   subjectName?: string;
   university?: string | null;
   major?: string | null;

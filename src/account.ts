@@ -11,11 +11,26 @@ export type AccountRole =
 export type StaffRole = Extract<AccountRole, 'instructor' | 'manager' | 'admin' | 'super_admin'>;
 export type StaffAccountStatus = 'pending' | 'active' | 'rejected';
 
+export const STAFF_ENGLISH_NAME_MAX_LENGTH = 80;
+export const STAFF_ENGLISH_NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]*$/;
+export const STAFF_ENGLISH_NAME_MESSAGE = "영문 이름은 영문자, 공백, 마침표, 작은따옴표, 하이픈만 사용할 수 있습니다.";
+
+/** 직원 영문 이름 정본. 가입·내정보·강사 등록의 FE/BE 검증이 함께 사용한다. */
+export const normalizeStaffEnglishName = (value: string): string => value.trim().replace(/\s+/g, ' ');
+
+export const staffEnglishNameError = (value: string): string | null => {
+  const normalized = normalizeStaffEnglishName(value);
+  if (!normalized) return '영문 이름을 입력해 주세요.';
+  if (normalized.length > STAFF_ENGLISH_NAME_MAX_LENGTH) return `영문 이름은 ${STAFF_ENGLISH_NAME_MAX_LENGTH}자 이하여야 합니다.`;
+  return STAFF_ENGLISH_NAME_PATTERN.test(normalized) ? null : STAFF_ENGLISH_NAME_MESSAGE;
+};
+
 // 로그인 계정 (users). web id = nickname/username.
 export type Account = {
   id: ID;
   webId: string;
   name: string;
+  englishName: string;
   role: AccountRole;
 };
 
@@ -32,6 +47,7 @@ export type StaffProfile = {
   id: ID;
   webId: string;
   name: string;
+  englishName: string;
   email?: string | null;
   phone?: string | null;
   role: StaffRole;
@@ -95,17 +111,18 @@ export type StaffLoginResult = {
    * 응답 본문에 없다. 계약에 선언되지 않은 채 wire에만 존재하던 자격증명 필드였다.
    */
   accessToken?: string;
-  account: Pick<StaffProfile, 'id' | 'name' | 'role'> & { mustChangePassword: boolean };
+  account: Pick<StaffProfile, 'id' | 'name' | 'englishName' | 'role'> & { mustChangePassword: boolean };
 };
 
 export type StaffSignupResult = {
   ok: boolean;
   message: string;
-  account: Pick<StaffProfile, 'id' | 'webId' | 'name' | 'role' | 'status'>;
+  account: Pick<StaffProfile, 'id' | 'webId' | 'name' | 'englishName' | 'role' | 'status'>;
 };
 
 export type ProfileChangeFields = Partial<{
   name: string;
+  englishName: string;
   webId: string;
   email: string;
   phone: string | null;

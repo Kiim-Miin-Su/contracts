@@ -200,6 +200,8 @@ export type ScheduleResource = {
   type: AvailabilityOwner; // 'student' | 'instructor' | 'room'
   id: ID;
   name: string;
+  /** 직원 자원(instructor) 영문 이름. 학생·강의실 자원에는 없다. */
+  englishName?: string;
   color?: string;
   sub?: string; // 보조 라벨(과목·학년·정원 등)
   countryCode?: string; // owner 국가/시차 표시용. 예: KR, US, GB, US-W.

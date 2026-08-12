@@ -36,6 +36,7 @@ import type { ProfileChangeFields } from './account';
 export type CreateInstructorInput = {
   webId: string;
   name: string;
+  englishName: string;
   password: string;
   email?: string;
   phone?: string;
@@ -50,6 +51,7 @@ export type CreateInstructorInput = {
 
 export type UpdateInstructorInput = {
   name?: string;
+  englishName?: string;
   phone?: string;
   email?: string | null;
   university?: string | null;
