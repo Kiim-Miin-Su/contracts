@@ -11,6 +11,24 @@ export type AccountRole =
 export type StaffRole = Extract<AccountRole, 'instructor' | 'manager' | 'admin' | 'super_admin'>;
 export type StaffAccountStatus = 'pending' | 'active' | 'rejected';
 
+/** 인증 메일·문자와 challenge 소비가 공유하는 업무 목적. 표시 문구가 아니라 보안 결속 값이다. */
+export const VERIFICATION_PURPOSES = [
+  'signup',
+  'account_recovery',
+  'profile_change',
+  'password_change',
+  'account_setup',
+] as const;
+export type VerificationPurpose = (typeof VERIFICATION_PURPOSES)[number];
+
+/** 로그인 후 profile_verification_challenges가 허용하는 목적. */
+export const PROFILE_VERIFICATION_PURPOSES = [
+  'profile_change',
+  'password_change',
+  'account_setup',
+] as const satisfies readonly VerificationPurpose[];
+export type ProfileVerificationPurpose = (typeof PROFILE_VERIFICATION_PURPOSES)[number];
+
 export const STAFF_ENGLISH_NAME_MAX_LENGTH = 80;
 export const STAFF_ENGLISH_NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]*$/;
 export const STAFF_ENGLISH_NAME_MESSAGE = "영문 이름은 영문자, 공백, 마침표, 작은따옴표, 하이픈만 사용할 수 있습니다.";
