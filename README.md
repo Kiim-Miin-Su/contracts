@@ -1,91 +1,59 @@
 # @kms545487/contracts
 
-프론트엔드(Next.js)와 백엔드(NestJS)가 공유하는 **도메인 계약** 단일 소스. 도메인 타입·enum·요청 DTO 형상을 담습니다.
+TACO ERP의 frontend와 backend가 함께 소비하는 도메인 계약 단일 소스입니다. 도메인 타입, enum,
+command input, projection, capability 정책과 FE/BE가 공유해야 하는 순수 규칙만 포함합니다.
 
-빌드 시 `dist/`에 `.d.ts`(+빈 `.js`)를 emit합니다. 소비측은 `import type`으로만 가져가 런타임 의존이 없습니다.
+- 현재 버전: `0.2.59`
+- 런타임 기준: Node 22.22.3
+- 산출물: `dist/index.d.ts`, `dist/index.js`
+- 소비자: `backend`, `frontend`
 
-## 빌드
-
-```bash
-npm install
-npm run build      # → dist/index.d.ts, dist/index.js
-```
-
-## 배포 (npm 레지스트리)
-
-repo가 분리되어 있어 **원격/CI 빌드에서는 `file:../contracts`가 동작하지 않습니다** (옆에 contracts 폴더가 없음).
-따라서 이 패키지를 배포하고, 소비측은 **버전**으로 의존해야 합니다.
-
-> ⚠️ `@taco` 스코프: 공개 npm에 올리려면 `@taco` 조직을 소유해야 합니다.
-> 소유하지 않으면 (a) 본인 스코프(`@yourorg/contracts`)로 이름을 바꾸거나,
-> (b) **GitHub Packages**(조직 스코프) 사용을 권장합니다.
-
-### 1) 배포
+## 로컬 검증
 
 ```bash
-cd contracts
-npm version patch               # 0.1.0 → 0.1.1 (변경 시마다)
-npm publish --access public     # prepublishOnly가 자동 build
+nvm use
+npm ci
+npm run build
+npm run typecheck
 ```
 
-#### 2FA 오류(E403) 해결
-npm은 publish에 2단계 인증을 요구합니다. 둘 중 하나:
-
-- **일회성(OTP)**: 인증앱 6자리 코드로 즉시 publish
-  ```bash
-  npm publish --access public --otp=123456
-  ```
-- **토큰(반복·CI 권장)**: npmjs.com → Access Tokens → **Granular/Automation token**
-  (publish 시 2FA bypass 가능)를 발급 → 환경변수로 주입 (이 폴더의 `.npmrc`가 `${NPM_TOKEN}` 사용)
-  ```bash
-  export NPM_TOKEN=npm_xxxxx
-  npm publish --access public
-  ```
-  CI에서는 `NPM_TOKEN`을 시크릿으로 등록하면 됩니다.
-
-> 비공개로 두려면 `--access public` 대신 `publishConfig.access: "restricted"`(유료 플랜 필요).
-
-### 2) 소비측(frontend·backend) 의존 전환
-
-```jsonc
-// package.json
-{ "dependencies": { "@kms545487/contracts": "^0.1.0" } }   // file:../contracts → 버전
-```
+도메인 변경 뒤에는 계약만 통과한 것으로 완료하지 않습니다. workspace release가 로컬 `dist`를 두
+소비자의 `node_modules`에 stage한 뒤 backend/frontend typecheck·test·build를 같은 계약으로 검사합니다.
 
 ```bash
-npm install        # 레지스트리에서 설치 → CI 빌드 통과
+cd ..
+PREFLIGHT_ONLY=1 ./scripts/release.zsh
 ```
 
-### 로컬 개발 (미배포 변경분 사용)
+## 버전과 배포 규칙
 
-배포 전 로컬에서 최신 계약을 쓰려면 `npm link` 사용:
+1. exported d.ts 표면이 바뀌면 `package.json` 버전을 올립니다.
+2. `npm publish` 전에 backend/frontend가 새 버전으로 빌드되는지 stage gate를 통과합니다.
+3. publish 뒤 실제 npm tarball을 소비자 lockfile에 반영하고 전체 gate를 다시 실행합니다.
+4. `dist`가 npm의 같은 버전과 다른데 버전을 올리지 않으면 release가 중단됩니다.
+5. 수동 `npm link`는 lockfile과 실제 배포 계약을 가릴 수 있으므로 release 증거로 사용하지 않습니다.
 
-```bash
-cd contracts && npm run build && npm link
-cd ../frontend && npm link @kms545487/contracts
-cd ../backend  && npm link @kms545487/contracts
-```
+publish와 소비자 lock 갱신은 루트 `./scripts/release.zsh`가 담당합니다. registry token과 OTP는 환경변수나
+보안 저장소에서만 주입하며 문서·Git·로그에 기록하지 않습니다.
 
-## 구성
+## 소스 구성
 
-```
+```text
 src/
-├─ common.ts      # ID, ISODate, Audited
-├─ account.ts     # Account, AccountRole, WebIdCheckResult
-├─ people.ts      # Student, Parent, ParentStudent, Instructor
-├─ catalog.ts     # Subject, Course(hourlyRate)
-├─ enrollment.ts  # Enrollment
-├─ session.ts     # ClassSession, Attendance, SessionReport
-├─ finance.ts     # Payment, Transaction, Expense(ApprovalStatus), InstructorPayout
-├─ counsel.ts     # CounselForm, CounselRound
-├─ event.ts       # AcademyEvent, EventType, EventPriority
-└─ inputs.ts      # Create*Input (요청 DTO 형상)
+├─ account.ts / role-policy.ts        # 계정·역할·capability
+├─ people.ts / staff-attendance.ts    # 학생·보호자·강사·직원 근태
+├─ catalog.ts / enrollment.ts         # 과목·코스·수강
+├─ schedule.ts / session.ts           # 캘린더·수업·출결·리포트
+├─ counsel.ts / event.ts              # 상담·학원 이벤트
+├─ finance.ts / workload.ts           # 수납·지출·정산·업무량
+├─ notification.ts / projections.ts   # 알림·읽기 투영
+├─ rrn.ts                              # FE/BE 공용 RRN 정규화·검증
+├─ inputs.ts                           # command input 계약
+└─ index.ts                            # 공개 barrel
 ```
 
-## 변경 이력 (2026-06-29)
+DB column과 계약이 같아야 한다는 이유만으로 DB 전용 필드를 브라우저 계약에 노출하지 않습니다.
+영속 shape는 `docs/erd.dbml`과 migration이, wire shape는 contracts와 OpenAPI가 각각 소유하며
+backend parity gate가 양쪽의 필요한 접점을 검증합니다.
 
-- `ScheduleRow`: `studentIds`/`studentNames`(코호트) 추가.
-- `ScheduleResource`·`ScheduleResources`·`ScheduleCourseOption` 신규(자원 피커).
-- `CreateClassSessionInput`: `roomId`·`endTime`·`seriesId` 추가(추천→배정).
-
-과거 TBO 진행 메모는 `docs/archive/`에 보존되어 있습니다. 현재 프로젝트 문서 입구는 루트 `docs/README.md`와 `docs/CODEX.md`입니다.
+전체 운영 계약과 릴리스 기준은 [docs/README.md](../docs/README.md)에서 시작합니다.
