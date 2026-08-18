@@ -108,8 +108,8 @@ export type AvailabilityImpactConflict = AvailabilityImpactResponse & {
 };
 
 /**
- * 세션 참여자 단일 규칙: 명시 코호트가 있으면 그것을 우선하고, 비어 있을 때만
- * 해당 코스의 활성 수강생을 사용한다. backend와 frontend가 같은 정렬·중복 제거를 소비한다.
+ * 세션 참가자 단일 규칙: 명시 참가자가 있으면 과목/수강 관계와 무관하게 그것을 우선한다.
+ * 비어 있을 때의 활성 수강생 fallback은 과거 세션·구 클라이언트 호환 전용이다.
  */
 export function resolveSessionParticipantIds(
   explicitStudentIds: readonly ID[] | null | undefined,
@@ -167,7 +167,7 @@ export type CreateScheduleSeriesCommand = {
   /** undefined=코스 기본 강사, null=명시적 배정중, 숫자=지정 강사 */
   instructorId?: ID | null;
   roomId?: ID;
-  studentIds?: ID[]; // 명시 코호트(부분 선택) — 미지정=코스 활성 수강생 파생
+  studentIds?: ID[]; // 명시 참가자 snapshot — enrollment와 독립. 미지정은 legacy fallback 전용
   repeat: {
     kind: ScheduleSeriesRepeatKind;
     weekdays: number[]; // 0~6, 중복 없음(weekly는 1개)
@@ -364,7 +364,7 @@ export type ScheduleRequest = {
   mode?: SessionMode; // [C2D 2026-07-08] 수업방식 보존 — 요청→승인 세션까지 전달(미지정=in_person)
   topic?: string;
   memo?: string; // 강사 입력 메모 — 요청 DB에 저장되고 승인 시 class_sessions.memo로 전달
-  studentIds?: ID[]; // 명시 코호트 — 코스 활성 수강생 부분집합(세션과 동일 검증)
+  studentIds?: ID[]; // 명시 참가자 snapshot — 과목/수강과 독립, 활성 학생 여부만 검증
   requestReason?: string; // 요청자가 제출한 사유(반려 사유 reason과 분리)
   instructorAttendanceBefore?: InstructorAttendanceStatus | null; // 정정 요청 생성 시점 DB snapshot(CAS)
   requestedInstructorAttendance?: InstructorAttendanceStatus; // 승인 시 적용할 목표 강사 출결

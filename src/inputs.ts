@@ -24,7 +24,7 @@ import type {
   ScheduleSeriesRepeatKind,
 } from './schedule';
 import type { Course, Subject } from './catalog';
-import type { Enrollment, EnrollmentStatus } from './enrollment';
+import type { EnrollmentStatus } from './enrollment';
 import type {
   CounselFormInputSnapshot,
   CounselResult,
@@ -293,7 +293,7 @@ export type CreateClassSessionInput = {
   startTime: string; // 'HH:mm'
   endTime?: string; // 'HH:mm' (미지정 시 start+duration 파생). [R-9] startTime보다 이르면 익일 종료(자정 크로스)로 해석
   durationMinutes?: number; // endTime 없을 때 사용(기본 60)
-  studentIds?: ID[]; // 명시 코호트(v0.1.13) — 코스 활성 수강생 부분집합
+  studentIds?: ID[]; // 명시 참가자 snapshot — 과목/수강과 독립, 활성 학생 여부만 검증
   topic?: string;
   memo?: string;
   color?: string;
@@ -370,7 +370,6 @@ export type OpenClassSeriesInput = OpenClassCatalogInput & {
 export type OpenClassResult = {
   subject: Subject;
   course: Course;
-  enrollments: Enrollment[];
   row: ScheduleRow;
   conflicts: Conflict[];
 };
@@ -378,7 +377,6 @@ export type OpenClassResult = {
 export type OpenClassSeriesResult = {
   subject: Subject;
   course: Course;
-  enrollments: Enrollment[];
   series: ScheduleSeries;
   rows: ScheduleRow[];
   conflicts: Conflict[];

@@ -34,8 +34,9 @@ export type ClassSession = {
   color?: string; // 세션 색상 라벨(오버라이드). 미지정 시 코스 색 → 과목 색.
   makeupForSessionId?: ID; // 보강 세션이면 원본(취소·미진행) 세션 id를 가리킴(보강 이력 추적)
   instructorAttendance?: InstructorAttendanceStatus; // 강사 출결(출석/지각/결석/보강) — 강사 출결 현황 집계용
-  // [v0.1.13] 명시 코호트(피드백 2026-07-03) — 수업 추가 시 학생 선택(여러 명=단체).
-  //  미지정 = 기존대로 코스 활성 수강생 전원 파생. 지정 시 그 코스 활성 수강생의 부분집합만 허용(무결성).
+  // 수업 참가자 snapshot — 과목/코스 수강(enrollment)과 독립적인 M:N 행위 관계다.
+  // 신규 명령은 선택 학생을 항상 명시한다. 미지정은 과거 세션·구 클라이언트 호환을 위해서만
+  // 코스 활성 수강생을 파생하며, 신규 UI가 이 fallback에 의존해서는 안 된다.
   studentIds?: ID[];
   // [v0.1.14 — TBO-16] 종류(미지정=class 하위호환)·세션 단건 가격(상담 등 — 코스 정가 courses.price와 별개)
   kind?: SessionKind;

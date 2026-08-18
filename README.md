@@ -3,7 +3,7 @@
 TACO ERP의 frontend와 backend가 함께 소비하는 도메인 계약 단일 소스입니다. 도메인 타입, enum,
 command input, projection, capability 정책과 FE/BE가 공유해야 하는 순수 규칙만 포함합니다.
 
-- 현재 버전: `0.2.59`
+- 현재 버전: `0.2.60`
 - 런타임 기준: Node 22.22.3
 - 산출물: `dist/index.d.ts`, `dist/index.js`
 - 소비자: `backend`, `frontend`
